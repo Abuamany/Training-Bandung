@@ -1,0 +1,7 @@
+prp                     Plot an 'rpart' model.
+ptitanic                Titanic data with passenger names and other
+                        details removed.
+rpart.plot              Plot an 'rpart' model. A simplified interface
+                        to the 'prp' function.
+rpart.plot.version1     Plot an 'rpart' model (old version).
+show.prp.palettes       Show the built-in 'prp' palettes.

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "set.seed(42)\nlibrary(xgboost)\nlibrary(caret)\nstr(y)\ndataset<-y\n\nset.seed(42)\nindex <- createDataPartition(dataset$class, p = 0.7, list = FALSE)\ntrain_data <- dataset[index, ]\ntest_data  <- dataset[-index, ]\n\nlibrary(plyr)\nmodel_xgb <- caret::train(class ~ .,\n                          data = train_data,\n                          method = \"xgbTree\",\n                          preProcess = c(\"scale\", \"center\"),\n                          trControl = trainControl(method = \"repeatedcv\", \n                                                   number = 3, \n                                                   repeats = 3, \n                                                   savePredictions = TRUE, \n                                                   verboseIter = FALSE))\n#Feature Importance\nimportance <- varImp(model_xgb, scale = TRUE)\nplot(importance)\n\n\n#predicting test data\npred1<-predict(model_xgb, train_data)\n\n\nconfusionMatrix(predict(model_xgb, train_data), train_data$class)\n\nresults <- data.frame(actual = test_data$class,predict(model_xgb, test_data, type = \"prob\"))\n\ntable(results[,1])\nlibrary(caret)\nconfusionMatrix(results[,1],test_data$class)\n\nlibrary(ROCR)\nytest<-test_data$Disengketakan\npred1<-predict(model_xgb, test_data, type = \"prob\")\npredroc <- prediction(predictions = pred1[,2], labels=ytest)\nroc<-performance(predroc,\"tpr\", \"fpr\")\nplot(roc, colorize=TRUE, main=\"ROC Curve\", xlab=\"Sensitivity\", ylab=\"1-Specifity\")\nabline(a=0, b=1, col=\"red\")\n#AUC\nauc<-performance(predroc,\"auc\")\nauc<-unlist(slot(auc, \"y.values\"))\nauc<-round(auc,4)\nlegend(.7, .5, auc, title=\"AUC\", cex=0.75)\n\n",
+    "created" : 1492690033583.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "3133885687",
+    "id" : "949FCD5A",
+    "lastKnownWriteTime" : 1492691568,
+    "last_content_update" : 1492691884599,
+    "path" : "~/Desktop/Tree Shiny2/XGB talent.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

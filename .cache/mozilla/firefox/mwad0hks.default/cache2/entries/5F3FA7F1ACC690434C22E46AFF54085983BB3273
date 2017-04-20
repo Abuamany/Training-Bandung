@@ -1,0 +1,654 @@
+(function() {
+  angular.module('app.controllers.account', []).controller('BillingPageCtrl', [
+    '$scope', '$modal', 'AccountService', function($scope, $modal, AccountService) {
+      $scope.updateBillingInfo = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "updateBillingModal.html",
+          controller: 'BillingInfoModalCtrl',
+          size: 'lg',
+          resolve: {
+            account: function() {
+              return $scope.currentAccount;
+            }
+          }
+        });
+        return modalInstance.result.then(function(subscription) {
+          return $scope.currentAccount.subscription = subscription;
+        });
+      };
+      return $scope.updatePaymentInfo = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "updatePaymentModal.html",
+          controller: 'BillingPaymentModalCtrl',
+          size: 'lg',
+          resolve: {
+            account: function() {
+              return $scope.currentAccount;
+            }
+          }
+        });
+        return modalInstance.result.then(function(subscription) {
+          return $scope.currentAccount.subscription = subscription;
+        });
+      };
+    }
+  ]).controller('BillingPlanCtrl', [
+    '$scope', 'Plans', function($scope, plans) {
+      $scope.plans = Object.keys(plans).map(function(k) {
+        return plans[k];
+      });
+      $scope.isCurrent = function(plan) {
+        var current;
+        current = $scope.currentAccount.subscription.type.name;
+        if (current === 'beta') {
+          current = 'free';
+        }
+        return plan.type === current;
+      };
+      return $scope.isUpgrade = function(plan) {
+        var current;
+        current = $scope.currentAccount.subscription.type.name;
+        if (current === 'beta') {
+          current = 'free';
+        }
+        switch (current) {
+          case 'free':
+            switch (plan.type) {
+              case 'free':
+                return false;
+              case 'starter':
+                return true;
+              case 'basic':
+                return true;
+              case 'standard':
+                return true;
+              case 'professional':
+                return true;
+            }
+            break;
+          case 'starter':
+            switch (plan.type) {
+              case 'free':
+                return false;
+              case 'starter':
+                return false;
+              case 'basic':
+                return true;
+              case 'standard':
+                return true;
+              case 'professional':
+                return true;
+            }
+            break;
+          case 'basic':
+            switch (plan.type) {
+              case 'free':
+                return false;
+              case 'starter':
+                return false;
+              case 'basic':
+                return false;
+              case 'standard':
+                return true;
+              case 'professional':
+                return true;
+            }
+            break;
+          case 'standard':
+            switch (plan.type) {
+              case 'free':
+                return false;
+              case 'starter':
+                return false;
+              case 'basic':
+                return false;
+              case 'standard':
+                return false;
+              case 'professional':
+                return true;
+            }
+            break;
+          case 'professional':
+            switch (plan.type) {
+              case 'free':
+                return false;
+              case 'starter':
+                return false;
+              case 'basic':
+                return false;
+              case 'standard':
+                return false;
+              case 'professional':
+                return true;
+            }
+        }
+      };
+    }
+  ]).controller('BillingInfoModalCtrl', [
+    '$scope', '$modalInstance', 'AccountService', 'account', function($scope, $modalInstance, AccountService, account) {
+      $scope.currentAccount = account;
+      $scope.subscription = angular.copy($scope.currentAccount.subscription);
+      $scope.submitting = false;
+      $scope.error = null;
+      if (!$scope.subscription.billing.email) {
+        $scope.subscription.billing.email = $scope.currentAccount.owner.email;
+      }
+      if (!$scope.subscription.billing.name) {
+        $scope.subscription.billing.email = $scope.currentAccount.owner.display_name;
+      }
+      $scope.canSubmit = function() {
+        return $scope.updateBillingForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        return AccountService.updateSubscription($scope.currentAccount, {
+          billing: $scope.subscription.billing
+        }).error(function(data) {
+          $scope.submitting = false;
+          return $scope.error = data.error;
+        }).success(function(subscription) {
+          return $modalInstance.close(subscription);
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('BillingPaymentModalCtrl', [
+    '$scope', '$modalInstance', 'config', 'AccountService', 'account', function($scope, $modalInstance, config, AccountService, account) {
+      Stripe.setPublishableKey(config.STRIPE_KEY);
+      $scope.currentAccount = account;
+      $scope.subscription = angular.copy($scope.currentAccount.subscription);
+      $scope.error = null;
+      $scope.submitting = false;
+      if ($scope.subscription.payment) {
+        $scope.card = {
+          name: $scope.subscription.billing.name,
+          exp_month: $scope.subscription.payment.card_exp_month,
+          exp_year: $scope.subscription.payment.card_exp_year
+        };
+      } else {
+        $scope.card = {
+          name: $scope.subscription.billing.name,
+          exp_month: 1,
+          exp_year: 2017
+        };
+      }
+      $scope.canSubmit = function() {
+        return $scope.updatePaymentForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.error = null;
+        $scope.submitting = true;
+        return Stripe.card.createToken($scope.card, function(status, response) {
+          return $scope.$apply(function() {
+            var token;
+            if (response.error) {
+              $scope.error = response.error.message;
+              return $scope.submitting = false;
+            } else {
+              token = response.id;
+              return AccountService.updateSubscription($scope.currentAccount, {
+                token: token
+              }).error(function(data) {
+                $scope.error = data.error;
+                return $scope.submitting = false;
+              }).success(function(subscription) {
+                return $modalInstance.close(subscription);
+              });
+            }
+          });
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('BillingInvoiceListCtrl', [
+    '$scope', '$notify', 'AccountService', function($scope, $notify, AccountService) {
+      $scope.loading = false;
+      $scope.invoices = [];
+      $scope.$on('current_account_change', function() {
+        return $scope.refresh();
+      });
+      $scope.refresh = function() {
+        if ($scope.isAccountOwner()) {
+          $scope.loading = true;
+          return AccountService.listInvoices($scope.currentAccount, 10).success(function(data) {
+            return $scope.invoices = data.data;
+          }).error(function(data) {
+            return $notify.logError(data.error != null ? data.error : 'Error retrieving invoices.');
+          })["finally"](function() {
+            return $scope.loading = false;
+          });
+        }
+      };
+      return $scope.refresh();
+    }
+  ]).controller('InvoicePageCtrl', [
+    '$scope', '$routeParams', '$window', '$notify', 'AccountService', function($scope, $routeParams, $window, $notify, AccountService) {
+      $scope.loading = false;
+      $scope.invoice = null;
+      $scope.refresh = function() {
+        $scope.loading = true;
+        return AccountService.getInvoice($scope.currentAccount, $routeParams.invoice).success(function(data) {
+          return $scope.invoice = data;
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error retrieving invoice.');
+        })["finally"](function() {
+          return $scope.loading = false;
+        });
+      };
+      $scope.printInvoice = function() {
+        var originalContents, popupWin, printContents;
+        printContents = document.getElementById('invoice').innerHTML;
+        originalContents = document.body.innerHTML;
+        popupWin = window.open();
+        popupWin.document.open();
+        popupWin.document.write('<html> <head> <link rel="stylesheet" type="text/css" href="styles/bootstrap.css" /> <link rel="stylesheet" type="text/css" href="styles/main.css" /> <link rel="stylesheet" type="text/css" href="styles/app.css" /> </head><body onload="window.print()">' + printContents + '</html>');
+        return popupWin.document.close();
+      };
+      return $scope.refresh();
+    }
+  ]).controller('SubscriptionChangePageCtrl', [
+    '$scope', '$location', '$routeParams', 'config', 'AccountService', 'Plans', function($scope, $location, $routeParams, config, AccountService, plans) {
+      $scope.subscription = angular.copy($scope.currentAccount.subscription);
+      $scope.submitting = false;
+      $scope.card = null;
+      $scope.error = null;
+      $scope.interval = $routeParams.interval || 'month';
+      $scope.$watch('interval', function(val) {
+        $scope.plan = plans[$routeParams.plan + '-' + val];
+        if ($scope.plan == null) {
+          return $location.path('/404');
+        }
+      });
+      Stripe.setPublishableKey(config.STRIPE_KEY);
+      if (!$scope.subscription.billing.email) {
+        $scope.subscription.billing.email = $scope.currentAccount.owner.email;
+      }
+      if (!$scope.subscription.billing.name) {
+        $scope.subscription.billing.name = $scope.currentAccount.owner.display_name;
+      }
+      $scope.card = {
+        name: $scope.subscription.billing.name,
+        exp_month: 1,
+        exp_year: 2017
+      };
+      $scope.canSubmit = function() {
+        return $scope.changeForm.$valid && !$scope.submitting;
+      };
+      return $scope.doSubmit = function() {
+        $scope.error = null;
+        $scope.submitting = true;
+        return Stripe.card.createToken($scope.card, function(status, response) {
+          return $scope.$apply(function() {
+            var token;
+            if (response.error) {
+              $scope.error = response.error.message;
+              return $scope.submitting = false;
+            } else {
+              token = response.id;
+              return AccountService.updateSubscription($scope.currentAccount, {
+                plan: $scope.plan.type + "-" + $scope.plan.interval,
+                billing: $scope.subscription.billing,
+                coupon: $scope.coupon || null,
+                token: token
+              }).success(function(data) {
+                $scope.currentAccount.subscription = data;
+                return $location.path('/account/billing');
+              }).error(function(data) {
+                $scope.error = data.error;
+                return $scope.submitting = false;
+              });
+            }
+          });
+        });
+      };
+    }
+  ]).controller('SubscriptionCancelPageCtrl', [
+    '$scope', '$location', 'AccountService', function($scope, $location, AccountService) {
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.cancelSubscriptionForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        return AccountService.cancelSubscription($scope.currentAccount).success(function(data) {
+          $scope.currentAccount.subscription = data;
+          return $location.path('/account/billing');
+        }).error(function(data) {
+          $scope.error = data.error;
+          return $scope.submitting = false;
+        });
+      };
+      return $scope.cancel = function() {
+        return $location.path('/account/billing');
+      };
+    }
+  ]).controller('MembersPageCtrl', [
+    '$scope', function($scope) {
+      $scope.hasAccountUsersEntitlement = function() {
+        var limit;
+        limit = $scope.currentAccount.subscription.entitlements.MaxAccountUsersLimit.limit;
+        return (limit != null) && limit > 0;
+      };
+      return $scope.hasAccountGroupsEntitlement = function() {
+        var limit;
+        limit = $scope.currentAccount.subscription.entitlements.MaxAccountGroupsLimit.limit;
+        return (limit != null) && limit > 0;
+      };
+    }
+  ]).controller('MemberListCtrl', [
+    '$scope', '$notify', 'AccountService', function($scope, $notify, AccountService) {
+      $scope.loading = false;
+      $scope.members = [];
+      $scope.invited = [];
+      $scope.$on('current_account_change', function() {
+        return $scope.refresh();
+      });
+      $scope.refresh = function() {
+        $scope.loading = true;
+        return AccountService.getMembers($scope.currentAccount).then(function(data) {
+          $scope.members = data;
+          return AccountService.getInvited($scope.currentAccount).then(function(data) {
+            return $scope.invited = data;
+          }, function(data) {
+            return $notify.logError(data.error != null ? data.error : 'Error retrieving invitations.');
+          });
+        }, function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error retrieving members.');
+        })["finally"](function() {
+          return $scope.loading = false;
+        });
+      };
+      $scope.removeUser = function(i) {
+        var user;
+        user = $scope.members[i];
+        return AccountService.removeMember($scope.currentAccount, user).success(function(data) {
+          return $scope.members.splice(i, 1);
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error removing member.');
+        });
+      };
+      $scope.removeInvite = function(i) {
+        var invite;
+        invite = $scope.invited[i];
+        return AccountService.cancelInvite(invite).success(function() {
+          return $scope.invited.splice(i, 1);
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error removing invitation.');
+        });
+      };
+      $scope.resendInvite = function(i) {
+        var invite;
+        invite = $scope.invited[i];
+        return AccountService.resendInvite(invite).success(function() {
+          return $notify.log("Resent invite to " + invite.email);
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error re-sending invitation.');
+        });
+      };
+      return $scope.refresh();
+    }
+  ]).controller('MemberInviteCtrl', [
+    '$scope', 'AccountService', '$notify', function($scope, AccountService, $notify) {
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.inviteForm.$valid && $scope.inviteForm.$dirty && !$scope.submitting;
+      };
+      return $scope.doSubmit = function() {
+        $scope.submitting = true;
+        return AccountService.inviteUser($scope.currentAccount, $scope.inviteForm.email).success(function(data) {
+          $scope.inviteForm.email = null;
+          return $scope.refresh();
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error inviting member.');
+        })["finally"](function() {
+          return $scope.submitting = false;
+        });
+      };
+    }
+  ]).controller('UsagePageCtrl', [
+    '$scope', '$notify', 'AccountService', 'ApplicationService', 'ChartService', function($scope, $notify, AccountService, ApplicationService, ChartService) {
+      $scope.usageType = 'hours';
+      $scope.usagePeriod = 'current_cycle';
+      $scope.usageChart = null;
+      $scope.usageSummary = null;
+      $scope.$on('current_account_change', function() {
+        return $scope.refresh();
+      });
+      $scope.refresh = function() {
+        var cycle_start_date, interval, now, since_seconds, usagePeriod;
+        $scope.usageChart = null;
+        $scope.usageSummary = null;
+        if ($scope.usagePeriod === "current_cycle") {
+          cycle_start_date = $scope.currentAccount.subscription.cycle_start_date;
+          usagePeriod = cycle_start_date;
+        } else {
+          usagePeriod = $scope.usagePeriod;
+        }
+        AccountService.getUsageSummary($scope.currentAccount, {
+          from: usagePeriod
+        }).success(function(data) {
+          var usage, _i, _len, _ref, _results;
+          $scope.usageSummary = [];
+          $scope.usageTotal = data.hours.total;
+          _ref = data[$scope.usageType].applications;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            usage = _ref[_i];
+            _results.push((function(usage) {
+              return ApplicationService.getApplication(usage.id).success(function(data) {
+                var application;
+                application = data;
+                application.usage = usage;
+                return $scope.usageSummary.push(application);
+              }).error(function(error, code) {
+                var application;
+                if (code === 404) {
+                  application = {
+                    usage: usage,
+                    name: "(deleted)",
+                    id: usage.id
+                  };
+                  return $scope.usageSummary.push(application);
+                }
+              });
+            })(usage));
+          }
+          return _results;
+        });
+        if ($scope.usagePeriod === "current_cycle") {
+          now = Math.floor((new Date).getTime() / 1000);
+          since_seconds = (now - (Date.parse(cycle_start_date) / 1000)) + "s";
+          interval = ChartService.calculateAppropriateInterval(since_seconds);
+        } else {
+          interval = ChartService.calculateAppropriateInterval(usagePeriod);
+        }
+        return AccountService.getUsage($scope.currentAccount, $scope.usageType, {
+          from: usagePeriod,
+          interval: interval
+        }).success(function(data) {
+          var applications, hours, i, k, n, name, p, points, r, series, sum, time, _i, _len;
+          applications = (function() {
+            var _ref, _results;
+            _ref = data.points;
+            _results = [];
+            for (name in _ref) {
+              points = _ref[name];
+              _results.push(name);
+            }
+            return _results;
+          })();
+          if (applications.length > 0) {
+            series = {
+              data: [],
+              label: $scope.usageType
+            };
+            points = ((function() {
+              var _ref, _results;
+              _ref = data.points;
+              _results = [];
+              for (n in _ref) {
+                p = _ref[n];
+                _results.push(p);
+              }
+              return _results;
+            })()).reduce(function(p1, p2) {
+              if (p1.length > p2.length) {
+                return p1;
+              } else {
+                return p2;
+              }
+            });
+            for (i = _i = 0, _len = points.length; _i < _len; i = ++_i) {
+              r = points[i];
+              time = r[0];
+              hours = (function() {
+                var _j, _len1, _results;
+                _results = [];
+                for (_j = 0, _len1 = applications.length; _j < _len1; _j++) {
+                  k = applications[_j];
+                  if (data.points[k].length > i) {
+                    _results.push(data.points[k][i][1]);
+                  }
+                }
+                return _results;
+              })();
+              sum = hours.reduce(function(p1, p2) {
+                return p1 + p2;
+              }, 0);
+              series.data.push([time, sum]);
+            }
+            return $scope.usageChart = ChartService.barChart([series], interval);
+          } else {
+            return $scope.usageChart = ChartService.barChart([], interval);
+          }
+        }).error(function(data) {
+          $notify.logError(data.error != null ? data.error : 'Error retrieving chart data.');
+          return $scope.usageChart = ChartService.barChart([], interval);
+        });
+      };
+      return $scope.refresh();
+    }
+  ]).controller('AccountSettingsPageCtrl', [
+    '$scope', '$notify', '$modal', 'AccountService', '$location', function($scope, $notify, $modal, AccountService, $location) {
+      $scope.loading = false;
+      $scope.changeAccountName = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "changeAccountModal.html",
+          controller: 'ChangeAccountModalCtrl',
+          size: 'lg',
+          resolve: {
+            account: function() {
+              return angular.copy($scope.currentAccount);
+            },
+            account_name: function() {
+              return angular.copy($scope.account_name);
+            }
+          }
+        });
+        return modalInstance.result.then(function(data) {
+          $notify.log("Account updated.");
+          return $scope.currentAccount.name = angular.copy(data.name);
+        });
+      };
+      return $scope.transferAccount = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "transfer.html",
+          controller: 'TransferAccountModalCtrl',
+          size: 'lg',
+          resolve: {
+            account: function() {
+              return angular.copy($scope.currentAccount);
+            },
+            email_address: function() {
+              return angular.copy($scope.email_address);
+            }
+          }
+        });
+        return modalInstance.result.then(function(data) {
+          $notify.log("Account transferred.");
+          return $location.path('/logout');
+        });
+      };
+    }
+  ]).controller('ChangeAccountModalCtrl', [
+    '$scope', '$modalInstance', 'AccountService', 'account', '$notify', function($scope, $modalInstance, AccountService, account, $notify) {
+      $scope.account = account;
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.changeAccountNameForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        return AccountService.updateAccount($scope.account, {
+          name: $scope.account_name
+        }).success(function(data) {
+          return $modalInstance.close(data);
+        })["catch"](function(data) {
+          $scope.submitting = false;
+          $scope.error = data.data.error;
+          return $notify.logError($scope.error);
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('TransferAccountModalCtrl', [
+    '$scope', '$modalInstance', 'AccountService', 'UserService', 'account', '$notify', function($scope, $modalInstance, AccountService, UserService, account, $notify) {
+      $scope.account = account;
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.transferAccountForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        return AccountService.transferAccount($scope.account, $scope.email_address).success(function(data) {
+          return $modalInstance.close(data);
+        })["catch"](function(data) {
+          $scope.submitting = false;
+          $scope.error = data.data.error;
+          return $notify.logError($scope.error);
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]);
+
+}).call(this);
+n6Aià      Xø¢êXø¢ê=«’Xøá„   >    :https://www.shinyapps.io/admin/scripts/controllers/account.js necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAQAAgAAAAAAAAAAAAAAAAAAAAAB4vFIJp5wRkeyPxAQ9RJGKPqbqVvKO0mKuIl8ec8o/uhmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAUIMIIFBDCCA+ygAwIBAgISA0Ts33LowAg+Zs9m9tEz8o6AMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQDExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzAzMjcxNzE3MDBaFw0xNzA2MjUxNzE3MDBaMBsxGTAXBgNVBAMTEHd3dy5zaGlueWFwcHMuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCtYbnYnZ/rN6p/1Fqp8gX3qB6k1uy6TwOLZPF+lZxfQ4uonOowQ7UrFwapU+mITi/l5Rw77Pdal5jVGipicvvZbgZkMkc+HqUBDLGbMdqZct3QvqVQFVSKYkwQMWqIJkljmr2WSpbPtxeD9c6AJ8uU/orqZPZlOnRnI3/+8OlnTvogssGaAEWkijBF9NuDm42yDiLtv5qWhhKjzppgjDTYVA109kg/+DvMQFpvfWVG6Vy/Ic8fnJKrMpQOFyYuSOs1nkqw0xwirqbO6CHUMjWOr5gEekDRx+12SxpwR0FAdpBVb8WQWGvkAdkEJk+MyzBv1D2iKJ1QkkKQYYhdHGf/AgMBAAGjggIRMIICDTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFAitCoNqQC56a3oTa2Zjkc/MXX8oMB8GA1UdIwQYMBaAFKhKamMEfd265tE5t6ZFZe/zqOyhMHAGCCsGAQUFBwEBBGQwYjAvBggrBgEFBQcwAYYjaHR0cDovL29jc3AuaW50LXgzLmxldHNlbmNyeXB0Lm9yZy8wLwYIKwYBBQUHMAKGI2h0dHA6Ly9jZXJ0LmludC14My5sZXRzZW5jcnlwdC5vcmcvMBsGA1UdEQQUMBKCEHd3dy5zaGlueWFwcHMuaW8wgf4GA1UdIASB9jCB8zAIBgZngQwBAgEwgeYGCysGAQQBgt8TAQEBMIHWMCYGCCsGAQUFBwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCBqwYIKwYBBQUHAgIwgZ4MgZtUaGlzIENlcnRpZmljYXRlIG1heSBvbmx5IGJlIHJlbGllZCB1cG9uIGJ5IFJlbHlpbmcgUGFydGllcyBhbmQgb25seSBpbiBhY2NvcmRhbmNlIHdpdGggdGhlIENlcnRpZmljYXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL2xldHNlbmNyeXB0Lm9yZy9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAW666JtafvOyKokL4jdvNvNdNENb5+jsy11DteHT+Src08XKErD37JHNGB9eiP96ifoltDPCoY0khBXoUWgf/sqLCyGaN9ZKqzcsQVRi7zP96a+tCoTpA0+FUnGuh7V1Fnruzhr4S/P8aqi1RKcsJsaX2hd7VaDUeBcHoXD8VFnTWP12XXzRr/07MulIlpB5HFVqOWcgQ+u5HSBLpm5ypWzQdEwfZEn/JbVnbN7kiM1x823MwO2aflw8a6E9fjGjDcibUrSv2H5qy+no92APoZcf/P5iYRdS7pNcB+fRpQSaa53a8QWCq4SV3Q8N/bDfuwAkdQeBJfHy9TRgMkpstV8AvAQMAAAAAAQEAAAEA request-method GET response-head HTTP/1.1 200 OK
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Etag: "10b7b501648ab2410806c7e222904fad"
+Content-Length: 24214
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Etag: "10b7b501648ab2410806c7e222904fad"
+Content-Length: 24214
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 27035 net-response-time-onstop 27047   ^–

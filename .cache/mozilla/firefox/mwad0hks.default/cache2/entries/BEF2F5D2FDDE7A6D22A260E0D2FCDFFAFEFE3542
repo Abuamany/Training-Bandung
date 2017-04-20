@@ -1,0 +1,375 @@
+(function() {
+  angular.module('app', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'satellizer', 'ngClipboard', 'angulartics', 'angulartics.google.analytics', 'app.config', 'app.nav', 'app.service.api', 'app.service.cookie', 'app.service.session', 'app.service.chart', 'app.service.login', 'app.service.logger', 'app.service.user', 'app.service.task', 'app.service.account', 'app.service.application', 'app.service.bundle', 'app.service.container', 'app.service.domain', 'app.service.proxy', 'app.controllers', 'app.controllers.dashboard', 'app.controllers.login', 'app.controllers.logout', 'app.controllers.invite', 'app.controllers.password', 'app.controllers.email', 'app.controllers.signup', 'app.controllers.setup', 'app.controllers.task', 'app.controllers.user', 'app.controllers.application', 'app.controllers.account', 'app.controllers.domain', 'app.directives', 'app.directives.validation', 'app.directives.chart']).config([
+    '$authProvider', 'config', function($authProvider, config) {
+      $authProvider.tokenPrefix = '__shinyapps';
+      $authProvider.logoutRedirect = '/login';
+      $authProvider.loginRedirect = null;
+      $authProvider.google({
+        clientId: config.GOOGLE_CLIENT,
+        redirectUri: window.location.protocol + '//' + window.location.host + '/admin/',
+        optionalUrlParams: ['display', 'prompt'],
+        prompt: 'select_account'
+      });
+      $authProvider.github({
+        clientId: config.GITHUB_CLIENT,
+        redirectUri: window.location.protocol + '//' + window.location.host + '/admin/'
+      });
+      $authProvider.oauth2({
+        name: 'github_setup',
+        url: '/auth/github',
+        clientId: config.GITHUB_CLIENT,
+        authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+        requiredUrlParams: ['scope'],
+        optionalUrlParams: ['scope'],
+        scope: ['user:email'],
+        scopeDelimiter: ',',
+        redirectUri: window.location.protocol + '//' + window.location.host + '/admin/',
+        popupOptions: {
+          width: 1020,
+          height: 618
+        }
+      });
+      return $authProvider.oauth2({
+        name: 'github_repo',
+        url: '/auth/github',
+        clientId: config.GITHUB_CLIENT,
+        authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+        optionalUrlParams: ['scope'],
+        requiredUrlParams: ['scope'],
+        scope: ['user:email', 'repo'],
+        scopeDelimiter: ',',
+        redirectUri: window.location.protocol + '//' + window.location.host + '/admin/',
+        popupOptions: {
+          width: 1020,
+          height: 618
+        }
+      });
+    }
+  ]).config([
+    '$routeProvider', function($routeProvider) {
+      var appResolver, authResolver, setupResolver;
+      authResolver = [
+        '$q', '$location', '$auth', '$sessionStore', '$localStore', 'UserService', 'AccountService', function($q, $location, $auth, $sessionStore, $localStore, UserService, AccountService) {
+          var redirectURL, _fetchAccount, _fetchUser;
+          if ($auth.isAuthenticated()) {
+            _fetchUser = function() {
+              var deferred, user_id;
+              deferred = $q.defer();
+              user_id = $localStore.get('current_user_id');
+              if (user_id != null) {
+                UserService.getUser(user_id).success(function(data) {
+                  return $sessionStore.put('current_user', data);
+                })["finally"](function() {
+                  return deferred.resolve();
+                });
+              } else {
+                deferred.resolve();
+              }
+              return deferred.promise;
+            };
+            _fetchAccount = function() {
+              var account_id, deferred;
+              deferred = $q.defer();
+              account_id = $localStore.get('current_account_id');
+              if (account_id != null) {
+                AccountService.getAccount(account_id).success(function(data) {
+                  return $sessionStore.put('current_account', data);
+                })["finally"](function() {
+                  return deferred.resolve();
+                });
+              } else {
+                deferred.resolve();
+              }
+              return deferred.promise;
+            };
+            return $q.all(_fetchUser(), _fetchAccount());
+          } else {
+            redirectURL = encodeURIComponent($location.url());
+            return $location.url("/login?redirect=" + redirectURL);
+          }
+        }
+      ];
+      setupResolver = [
+        "$q", '$location', "$auth", "AccountService", function($q, $location, $auth, AccountService) {
+          var deferred;
+          if (!$auth.isAuthenticated()) {
+            return;
+          }
+          deferred = $q.defer();
+          AccountService.listAccounts(0).success(function(data) {
+            if (data.total > 0) {
+              return deferred.resolve();
+            } else {
+              return deferred.reject($location.path('/account/setup'));
+            }
+          });
+          return deferred.promise;
+        }
+      ];
+      appResolver = [
+        '$q', '$location', '$route', '$auth', 'ApplicationService', function($q, $location, $route, $auth, ApplicationService) {
+          var deferred;
+          if (!$auth.isAuthenticated()) {
+            return;
+          }
+          deferred = $q.defer();
+          ApplicationService.getApplication($route.current.params.id).success(function(data) {
+            return deferred.resolve(data);
+          }).error(function(data, status) {
+            return deferred.reject($location.path('/404'));
+          });
+          return deferred.promise;
+        }
+      ];
+      return $routeProvider.when('/', {
+        redirectTo: '/dashboard'
+      }).when('/signup', {
+        templateUrl: 'views/signup.html',
+        controller: 'SignupPageCtrl'
+      }).when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginPageCtrl'
+      }).when('/invite', {
+        templateUrl: 'views/invite.html',
+        controller: 'InvitePageCtrl'
+      }).when('/forgot-password', {
+        templateUrl: 'views/forgot-password.html',
+        controller: 'ForgotPasswordPageCtrl'
+      }).when('/validate-email', {
+        templateUrl: 'views/validate-email.html',
+        controller: 'ValidateEmailPageCtrl'
+      }).when('/reset-password', {
+        templateUrl: 'views/reset-password.html',
+        controller: 'ResetPasswordPageCtrl',
+        resolve: {
+          code: [
+            '$location', function($location) {
+              var code;
+              code = $location.search().code;
+              if (!code) {
+                $location.path('/500');
+              }
+              return code;
+            }
+          ],
+          user: [
+            '$location', function($location) {
+              var user;
+              user = $location.search().user;
+              if (!user) {
+                $location.path('/500');
+              }
+              return user;
+            }
+          ]
+        }
+      }).when('/logout', {
+        controller: 'LogoutPageCtrl',
+        templateUrl: 'views/login.html'
+      }).when('/setup', {
+        templateUrl: 'views/setup.html',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardPageCtrl',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/application/:id', {
+        templateUrl: 'views/applications/detail.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/application/:id/urls', {
+        templateUrl: 'views/applications/urls.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/application/:id/logs', {
+        templateUrl: 'views/applications/logs.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/application/:id/settings', {
+        templateUrl: 'views/applications/settings.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/application/:id/users', {
+        templateUrl: 'views/applications/users.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/application/:id/metrics', {
+        templateUrl: 'views/applications/metrics.html',
+        controller: 'ApplicationPageCtrl',
+        resolve: {
+          auth: authResolver,
+          application: appResolver
+        }
+      }).when('/applications/:status', {
+        templateUrl: 'views/applications/list.html',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/profile', {
+        templateUrl: 'views/profile.html',
+        controller: 'ProfilePageCtrl',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/tokens', {
+        templateUrl: 'views/tokens.html',
+        controller: 'TokensPageCtrl',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/account/setup', {
+        templateUrl: 'views/setup.html',
+        resolve: {
+          auth: authResolver
+        }
+      }).when('/account/domains', {
+        templateUrl: 'views/account/domains.html',
+        controller: 'DomainsPageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/settings', {
+        templateUrl: 'views/account/settings.html',
+        controller: 'AccountSettingsPageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/members', {
+        templateUrl: 'views/account/members.html',
+        controller: 'MembersPageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/billing', {
+        templateUrl: 'views/account/billing.html',
+        controller: 'BillingPageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/usage', {
+        templateUrl: 'views/account/usage.html',
+        controller: 'UsagePageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/invoice/:invoice', {
+        templateUrl: 'views/account/invoice.html',
+        controller: 'InvoicePageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/billing/plan/:plan/change', {
+        templateUrl: 'views/account/change.html',
+        controller: 'SubscriptionChangePageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/account/billing/plan/cancel', {
+        templateUrl: 'views/account/cancel.html',
+        controller: 'SubscriptionCancelPageCtrl',
+        resolve: {
+          auth: authResolver,
+          setup: setupResolver
+        }
+      }).when('/exceeded', {
+        templateUrl: 'views/exceeded.html',
+        controller: 'ExceededPageCtrl'
+      }).when('/suspended', {
+        templateUrl: 'views/suspended.html',
+        controller: 'SuspendedPageCtrl'
+      }).when('/401', {
+        templateUrl: 'views/error.html',
+        controller: 'ErrorCtrl',
+        resolve: {
+          error: function() {
+            return 401;
+          }
+        }
+      }).when('/403', {
+        templateUrl: 'views/error.html',
+        controller: 'ErrorCtrl',
+        resolve: {
+          error: function() {
+            return 403;
+          }
+        }
+      }).when('/404', {
+        templateUrl: 'views/error.html',
+        controller: 'ErrorCtrl',
+        resolve: {
+          error: function() {
+            return 404;
+          }
+        }
+      }).when('/500', {
+        templateUrl: 'views/error.html',
+        controller: 'ErrorCtrl',
+        resolve: {
+          error: function() {
+            return 500;
+          }
+        }
+      }).otherwise({
+        redirectTo: '/404'
+      });
+    }
+  ]).config([
+    'ngClipProvider', function(ngClipProvider) {
+      return ngClipProvider.setPath("components/zeroclipboard/dist/ZeroClipboard.swf");
+    }
+  ]).run([
+    '$location', '$window', 'config', function($location, $window, config) {
+      if (config.FORCE_SSL) {
+        if ($location.protocol() !== 'https') {
+          return $window.location.href = $location.absUrl().replace('http', 'https');
+        }
+      }
+    }
+  ]);
+
+}).call(this);
+w€‹È2é      X¯¢õX¯¢∞=´èzX¯·g   -    :http://www.shinyapps.io/admin/scripts/app.js necko:classified 1 strongly-framed 1 request-method GET response-head HTTP/1.1 200 OK
+Last-Modified: Tue, 18 Apr 2017 15:20:17 GMT
+Etag: "a25980d6c25485894fc5a7be1c3462fe"
+Date: Thu, 20 Apr 2017 11:59:43 GMT
+Content-Type: application/javascript
+Accept-Ranges: bytes
+Server: TornadoServer/4.0.2
+Content-Length: 12706
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Last-Modified: Tue, 18 Apr 2017 15:20:17 GMT
+Etag: "a25980d6c25485894fc5a7be1c3462fe"
+Date: Thu, 20 Apr 2017 11:59:43 GMT
+Content-Type: application/javascript
+Accept-Ranges: bytes
+Server: TornadoServer/4.0.2
+Content-Length: 12706
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 20704 net-response-time-onstop 20794   1¢

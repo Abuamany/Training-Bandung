@@ -1,0 +1,1310 @@
+1492673778196:setwd("/media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637")
+1492673845228:tal_eval <- read.csv("/media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/mydata10.csv",header=T, sep=",")
+1492673849642:tal_eval<-tal_eval[,2:8]
+1492673850889:nv <- length(tal_eval) # number of attributes
+1492673852871:nv
+1492673854573:cm<-list()
+1492673855334:x<-tal_eval[,1:(nv-1)]
+1492673856073:y<-tal_eval[,nv]
+1492673858759:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492673859415:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492673860406:fmla<-as.formula(fmla)
+1492673865449:fmla
+1492673887311:tal_eval<-tal_eval[,2:8]
+1492673888261:nv <- length(tal_eval) # number of attributes
+1492673889425:nv
+1492673890568:cm<-list()
+1492673894233:x<-tal_eval[,1:(nv-1)]
+1492673894730:y<-tal_eval[,nv]
+1492673903575:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492673911078:tal_eval <- read.csv("/media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/mydata10.csv",header=T, sep=",")
+1492673913248:tal_eval<-tal_eval[,2:8]
+1492673922598:str(tal_eval)
+1492674384090:tal_eval <- read.csv("/home/peopleanalytics/Desktop/mydata10.csv",header=T, sep=",")
+1492674384895:tal_eval<-tal_eval[,2:8]
+1492674385512:nv <- length(tal_eval) # number of attributes
+1492674386132:nv
+1492674387108:cm<-list()
+1492674388164:x<-tal_eval[,1:(nv-1)]
+1492674388691:y<-tal_eval[,nv]
+1492674389290:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492674389824:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492674390925:fmla<-as.formula(fmla)
+1492674396157:fmla
+1492674420884:str(tal_eval)
+1492674512667:library(Rcurl)
+1492674534723:install.packages("Rcurl")
+1492674555990:install.packages('Rcurl')
+1492674563840:install.packages('RCurl')
+1492674602789:library(stringr)
+1492674605117:library(knitr)
+1492674618860:install.packages(stringr)
+1492674645381:install.packages('stringr')
+1492674712956:install.packages('knitr')
+1492674766357:library('stringr')
+1492674777288:library('knitr')
+1492674778166:library(Rcurl)
+1492674784419:library(RCurl)
+1492674889750:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv", header=T, sep=",")
+1492674900688:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv", header=T)
+1492674922157:y <- read.csv(text = x)
+1492674926836:y
+1492674937173:head(y)
+1492674949221:str(y)
+1492674967670:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492674977718:y <- read.csv(text = x)
+1492674993888:y
+1492675008479:head(y)
+1492675037619:set.seed(123)
+1492675058525:tal_eval<-y
+1492675061643:tal_eval<-tal_eval[,2:8]
+1492675062441:nv <- length(tal_eval) # number of attributes
+1492675063675:nv
+1492675066132:cm<-list()
+1492675066781:x<-tal_eval[,1:(nv-1)]
+1492675067269:y<-tal_eval[,nv]
+1492675067857:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492675068292:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492675069398:fmla<-as.formula(fmla)
+1492675073853:fmla
+1492675084363:nlev<-nlevels(y) # number of factors describing class
+1492675086297:nlev
+1492675088821:library(nnet)
+1492675089709:library(caret)
+1492675101921:install("caret")
+1492675112326:install.packages("caret")
+1492675126612:install.packages("nnet")
+1492675130891:install.packages("nnet")
+1492675145615:install.packages("nnet")
+1492675158269:library(caret)
+1492675171748:install.packages("caret")
+1492675202995:install.packages("caret")
+1492675589438:install.packages("caret")
+1492675620263:install.packages("nnet")
+1492675663960:tal_eval<-y
+1492675664571:tal_eval<-tal_eval[,2:8]
+1492675664916:nv <- length(tal_eval) # number of attributes
+1492675666336:nv
+1492675676615:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492675678786:y <- read.csv(text = x)
+1492675691705:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492675704929:library(RCurl)
+1492675706909:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492675708780:y <- read.csv(text = x)
+1492675709561:head(y)
+1492675710564:set.seed(123)
+1492675711336:tal_eval<-y
+1492675711955:tal_eval<-tal_eval[,2:8]
+1492675712785:nv <- length(tal_eval) # number of attributes
+1492675713382:nv
+1492675714663:cm<-list()
+1492675715465:x<-tal_eval[,1:(nv-1)]
+1492675716015:y<-tal_eval[,nv]
+1492675716747:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492675717581:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492675718156:fmla<-as.formula(fmla)
+1492675718941:fmla
+1492675720420:nlev<-nlevels(y) # number of factors describing class
+1492675721074:nlev
+1492675721766:library(nnet)
+1492675722882:library(caret)
+1492675725561:model<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE)
+1492675726365:prob<-predict(model,x,type="probs")
+1492675727243:pred<-apply(prob,1,which.max)
+1492675727483:pred[which(pred=="1")]<-levels(y)[1]
+1492675727721:pred[which(pred=="2")]<-levels(y)[2]
+1492675727907:pred[which(pred=="3")]<-levels(y)[3]
+1492675728098:pred[which(pred=="4")]<-levels(y)[4]
+1492675728293:pred<-as.factor(pred)
+1492675728534:l<-union(pred,y)
+1492675728999:mtab<-table(factor(pred,l),factor(y,l))
+1492675729738:mtab
+1492675730421:cm[[1]]<-c("Multinomial","MULTINOM",confusionMatrix(mtab))
+1492675731011:cm[[1]]$table
+1492675735522:cm[[1]]$overall[1]
+1492675773762:install.packages("e1071")
+1492675793961:library(""e1071"")
+1492675807179:library("e1071")
+1492675813530:cm[[1]]<-c("Multinomial","MULTINOM",confusionMatrix(mtab))
+1492675814316:cm[[1]]$table
+1492675815917:cm[[1]]$overall[1]
+1492675820836:library(VGAM)
+1492675839072:install.packages("VGAM")
+1492675881307:model<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100)
+1492675887556:library(VGAM)
+1492675888461:model<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100)
+1492675899855:library(VGAM)
+1492675901453:model<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100)
+1492675904263:prob<-predict(model,x,type="response")
+1492675907240:pred<-apply(prob,1,which.max)
+1492675907732:pred[which(pred=="1")]<-levels(y)[1]
+1492675908081:pred[which(pred=="2")]<-levels(y)[2]
+1492675908278:pred[which(pred=="3")]<-levels(y)[3]
+1492675908483:pred[which(pred=="4")]<-levels(y)[4]
+1492675909267:pred<-as.factor(pred)
+1492675909705:l<-union(pred,y)
+1492675909846:mtab<-table(factor(pred,l),factor(y,l))
+1492675910667:cm[[2]]<-c("Logistic Regression","GLM",confusionMatrix(mtab))
+1492675911400:cm[[2]]$table
+1492675912952:cm[[2]]$overall[1]
+1492675932728:model<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100)
+1492675947260:use warnings()
+1492675952704:warnings()
+1492675970107:library(MASS)
+1492675972271:model<-lda(fmla,data=tal_eval)
+1492675972803:pred<-predict(model,x)$class
+1492675973096:l<-union(pred,y)
+1492675974954:mtab<-table(factor(pred,l),factor(y,l))
+1492675975629:cm[[3]]<-c("Linear Discriminant Analysis","LDA",confusionMatrix(mtab))
+1492675976249:cm[[3]]$table
+1492675977248:cm[[3]]$overall[1]
+1492675979214:library(mda)
+1492675996513:install.packages("mda")
+1492676006510:library(mda)
+1492676007945:model<-mda(fmla,data=tal_eval)
+1492676008391:pred<-predict(model,x)
+1492676008803:l<-union(pred,y)
+1492676008982:mtab<-table(factor(pred,l),factor(y,l))
+1492676009435:cm[[4]]<-c("Mixture Discriminant Analysis","MDA",confusionMatrix(mtab))
+1492676010075:cm[[4]]$table
+1492676010778:cm[[4]]$overall[1]
+1492676014482:library(klaR)
+1492676033257:install.packages('klaR')
+1492676042932:library(klaR)
+1492676043697:model<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01)
+1492676044457:pred<-predict(model,x)$class
+1492676045126:l<-union(pred,y)
+1492676045537:mtab<-table(factor(pred,l),factor(y,l))
+1492676046244:cm[[5]]<-c("Regularized Discriminant Analysis","RDA",confusionMatrix(mtab))
+1492676047351:cm[[5]]$table
+1492676048560:cm[[5]]$overall[1]
+1492676053509:library(nnet)
+1492676055566:library(devtools)
+1492676079357:install.packages("devtools")
+1492676434992:library(nnet)
+1492676435943:library(devtools)
+1492676437461:model<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700, trace = FALSE)
+1492676438841:source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+1492676439396:plot.nnet(model, alpha.val = 0.5, cex= 0.7, circle.col = list('lightblue', 'white'), bord.col = 'black')
+1492676439619:pred<-predict(model,x,type="class")
+1492676439638:pred<-as.factor(pred)
+1492676440035:l<-union(pred,y)
+1492676443662:mtab<-table(factor(pred,l),factor(y,l))
+1492676444111:cm[[6]]<-c("Neural Network","NNET",confusionMatrix(mtab))
+1492676444559:cm[[6]]$table
+1492676445453:cm[[6]]$overall[1]
+1492676461168:library(reshape)
+1492676465531:model<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700, trace = FALSE)
+1492676469156:source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+1492676469229:plot.nnet(model, alpha.val = 0.5, cex= 0.7, circle.col = list('lightblue', 'white'), bord.col = 'black')
+1492676469363:pred<-predict(model,x,type="class")
+1492676475949:pred<-as.factor(pred)
+1492676476749:l<-union(pred,y)
+1492676477107:mtab<-table(factor(pred,l),factor(y,l))
+1492676477351:cm[[6]]<-c("Neural Network","NNET",confusionMatrix(mtab))
+1492676477720:cm[[6]]$table
+1492676478599:cm[[6]]$overall[1]
+1492676503726:install.packages("reshape")
+1492676511112:library(reshape)
+1492676512492:model<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700, trace = FALSE)
+1492676513857:source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+1492676513912:plot.nnet(model, alpha.val = 0.5, cex= 0.7, circle.col = list('lightblue', 'white'), bord.col = 'black')
+1492676517274:pred<-predict(model,x,type="class")
+1492676518707:pred<-as.factor(pred)
+1492676520077:l<-union(pred,y)
+1492676520581:mtab<-table(factor(pred,l),factor(y,l))
+1492676521149:cm[[6]]<-c("Neural Network","NNET",confusionMatrix(mtab))
+1492676521728:cm[[6]]$table
+1492676522855:cm[[6]]$overall[1]
+1492676530929:model<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700, trace = FALSE)
+1492676535027:source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+1492676537293:plot.nnet(model, alpha.val = 0.5, cex= 0.7, circle.col = list('lightblue', 'white'), bord.col = 'black')
+1492676538105:pred<-predict(model,x,type="class")
+1492676538607:pred<-as.factor(pred)
+1492676539028:l<-union(pred,y)
+1492676539374:mtab<-table(factor(pred,l),factor(y,l))
+1492676539585:cm[[6]]<-c("Neural Network","NNET",confusionMatrix(mtab))
+1492676539774:cm[[6]]$table
+1492676540038:cm[[6]]$overall[1]
+1492677280031:library(mda)
+1492677281624:model<-fda(fmla,data=tal_eval)
+1492677282098:pred<-predict(model,x,type="class")
+1492677282455:l<-union(pred,y)
+1492677282805:mtab<-table(factor(pred,l),factor(y,l))
+1492677283060:cm[[7]]<-c("Flexible Discriminant Analysis","FDA",confusionMatrix(mtab))
+1492677283458:cm[[7]]$table
+1492677283855:cm[[7]]$overall[1]
+1492677285493:library(kernlab)
+1492677308685:install.packages("kernlab")
+1492677352651:library(kernlab)
+1492677353195:model<-ksvm(fmla,data=tal_eval)
+1492677353598:pred<-predict(model,x,type="response")
+1492677353869:l<-union(pred,y)
+1492677354412:mtab<-table(factor(pred,l),factor(y,l))
+1492677354985:cm[[8]]<-c("Support Vector Machine","SVM",confusionMatrix(mtab))
+1492677355406:cm[[8]]$table
+1492677356992:cm[[8]]$overall[1]
+1492677359546:library(caret)
+1492677360221:model<-knn3(fmla,data=tal_eval,k=nlev+1)
+1492677360701:pred<-predict(model,x,type="class")
+1492677360977:l<-union(pred,y)
+1492677361246:mtab<-table(factor(pred,l),factor(y,l))
+1492677361689:cm[[9]]<-c("k-Nearest Neighbors","KNN",confusionMatrix(mtab))
+1492677362181:cm[[9]]$table
+1492677362931:cm[[9]]$overall[1]
+1492677366855:library(e1071)
+1492677367436:model<-naiveBayes(fmla,data=tal_eval,k=nlev+1)
+1492677367736:pred<-predict(model,x)
+1492677368161:l<-union(pred,y)
+1492677368254:mtab<-table(factor(pred,l),factor(y,l))
+1492677368763:cm[[10]]<-c("Naive Bayes","NBAYES",confusionMatrix(mtab))
+1492677369497:cm[[10]]$table
+1492677370619:cm[[10]]$overall[1]
+1492677373726:library(rpart)
+1492677375841:library(rpart.plot)
+1492677397225:install.packages('rpart.plot')
+1492677408280:library(rpart.plot)
+1492677408643:model<-rpart(fmla,data=tal_eval)
+1492677409006:pred<-predict(model, x ,type="class")
+1492677409301:l<-union(pred,y)
+1492677409925:mtab<-table(factor(pred,l),factor(y,l))
+1492677410393:cm[[11]]<-c("classification and Regression Trees","CART",confusionMatrix(mtab))
+1492677411247:cm[[11]]$table
+1492677423702:plot(model)
+1492677505165:rpart.plot(model)
+1492677510521:pred<-predict(model, x ,type="class")
+1492677510909:l<-union(pred,y)
+1492677511106:mtab<-table(factor(pred,l),factor(y,l))
+1492677511238:cm[[11]]<-c("classification and Regression Trees","CART",confusionMatrix(mtab))
+1492677511740:cm[[11]]$table
+1492677512685:cm[[11]]$overall[1]
+1492677517137:library(RWeka)
+1492677531125:install("RWeka")
+1492677540185:install.packages("RWeka")
+1492677577392:install.packages("ipred")
+1492677619645:install.packages("randomForest")
+1492677639410:install.packages("gbm")
+1492677658261:install.packages("C50")
+1492677698223:install.packages("microbenchmark")
+1492677731739:library(microbenchmark)
+1492677786183:library(RWeka)
+1492677786944:model<-OneR(fmla,data=tal_eval)
+1492677787111:pred<-predict(model,x,type="class")
+1492677787887:l<-union(pred,y)
+1492677788084:mtab<-table(factor(pred,l),factor(y,l))
+1492677788336:cm[[12]]<-c("One R","ONE-R",confusionMatrix(mtab))
+1492677788939:cm[[12]]$table
+1492677789539:cm[[12]]$overall[1]
+1492677790996:library(RWeka)
+1492677791635:model<-J48(fmla,data=tal_eval)
+1492677791833:pred<-predict(model,x)
+1492677792036:l<-union(pred,y)
+1492677792404:mtab<-table(factor(pred,l),factor(y,l))
+1492677792727:cm[[13]]<-c("C4.5","C45",confusionMatrix(mtab))
+1492677793305:cm[[13]]$table
+1492677793691:cm[[12]]$overall[1]
+1492677795157:library(RWeka)
+1492677795408:model<-PART(fmla,data=tal_eval)
+1492677795594:pred<-predict(model,x)
+1492677795860:l<-union(pred,y)
+1492677796048:mtab<-table(factor(pred,l),factor(y,l))
+1492677796305:cm[[14]]<-c("PART","PART",confusionMatrix(mtab))
+1492677796668:cm[[14]]$table
+1492677797289:cm[[14]]$overall[1]
+1492677798519:library(ipred)
+1492677798654:model<-bagging(fmla,data=tal_eval)
+1492677798929:pred<-predict(model,x)
+1492677799115:l<-union(pred,y)
+1492677799435:mtab<-table(factor(pred,l),factor(y,l))
+1492677800943:cm[[15]]<-c("Bagging CART","BAG-CART",confusionMatrix(mtab))
+1492677801324:cm[[15]]$table
+1492677803201:cm[[15]]$overall[1]
+1492677804730:library(randomForest)
+1492677805090:model<-randomForest(fmla,data=tal_eval)
+1492677806065:pred<-predict(model,x)
+1492677808523:l<-union(pred,y)
+1492677808946:mtab<-table(factor(pred,l),factor(y,l))
+1492677809321:cm[[16]]<-c("Random Forest","RF",confusionMatrix(mtab))
+1492677809489:cm[[16]]$table
+1492677811427:cm[[16]]$overall[1]
+1492677812739:library(gbm)
+1492677813955:model<-gbm(fmla,data=tal_eval,n.trees=5000,interaction.depth=nlev,shrinkage=0.001,bag.fraction=0.8,distribution="multinomial",verbose=FALSE,n.cores=4)
+1492677829447:prob<-predict(model,x,n.trees=5000,type="response")
+1492677830681:pred<-apply(prob,1,which.max)
+1492677830687:pred[which(pred=="1")]<-levels(y)[1]
+1492677830688:pred[which(pred=="2")]<-levels(y)[2]
+1492677830688:pred[which(pred=="3")]<-levels(y)[3]
+1492677830689:pred[which(pred=="4")]<-levels(y)[4]
+1492677830689:pred<-as.factor(pred)
+1492677830690:l<-union(pred,y)
+1492677830690:mtab<-table(factor(pred,l),factor(y,l))
+1492677830691:cm[[17]]<-c("Gradient Boosted Machine","GBM",confusionMatrix(mtab))
+1492677830705:cm[[17]]$table
+1492677830706:cm[[17]]$overall[1]
+1492677832599:library(C50)
+1492677833230:model<-C5.0(fmla,data=tal_eval,trials=10)
+1492677833928:pred<-predict(model,x)
+1492677834503:l<-union(pred,y)
+1492677834723:mtab<-table(factor(pred,l),factor(y,l))
+1492677835201:cm[[18]]<-c("Boosted C5.0","BOOST-C50",confusionMatrix(mtab))
+1492677835656:cm[[18]]$table
+1492677836162:cm[[18]]$overall[1]
+1492677837311:library(RWeka)
+1492677837635:model<-JRip(fmla,data=tal_eval)
+1492677838218:pred<-predict(model,x)
+1492677838434:l<-union(pred,y)
+1492677838455:mtab<-table(factor(pred,l),factor(y,l))
+1492677839144:cm[[19]]<-c("JRip","JRIP",confusionMatrix(mtab))
+1492677839492:cm[[19]]$table
+1492677840050:cm[[19]]$overall[1]
+1492677887237:setwd("~/Desktop")
+1492677928934:install.packages("dplyr")
+1492678163042:library(ggplot2)
+1492678173942:library(dplyr)
+1492678177608:library(ggplot2)
+1492678179388:library(gridExtra)
+1492678200282:install.packages("gridExtra")
+1492678212339:install.packages("RColorBrewer")
+1492678228911:library(dplyr)
+1492678229690:models<-length(cm)
+1492678230153:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492678230357:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492678247424:library(microbenchmark)
+1492678255311:mbm1<-microbenchmark(
+1492678255311:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492678255312:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492678255312:m3<-lda(fmla,data=tal_eval),
+1492678255313:m4<-mda(fmla,data=tal_eval),
+1492678255313:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01))
+1492678286689:mbm<-microbenchmark(
+1492678286689:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492678286690:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492678286690:m3<-lda(fmla,data=tal_eval),
+1492678286691:m4<-mda(fmla,data=tal_eval),
+1492678286692:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492678286692:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492678286693:m7<-fda(fmla,data=tal_eval),
+1492678286693:m8<-ksvm(fmla,data=tal_eval),
+1492678286694:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492678286694:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492678286695:m11<-rpart(fmla,data=tal_eval),
+1492678286695:m12<-OneR(fmla,data=tal_eval),
+1492678286696:m13<-J48(fmla,data=tal_eval),
+1492678286696:m14<-PART(fmla,data=tal_eval),
+1492678286697:m15<-bagging(fmla,data=tal_eval),
+1492678286697:m16<-randomForest(fmla,data=tal_eval),
+1492678286698:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492678286698:m19<-JRip(fmla,data=tal_eval))
+1492678632373:library(dplyr)
+1492678632941:models<-length(cm)
+1492678633848:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492678639854:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492678640435:mbm$x<-mbm$x/min(mbm$x)
+1492678641020:results<-sapply (1:models, function(i) {c(cm[[i]][[1]],cm[[i]][[2]],mbm$x[i],cm[[i]]$overall[1:6])})
+1492678641232:row.names(results)<-c("Description","Model","Model_Time_X",names(cm[[1]]$overall[1:6]))
+1492678641420:results<-as.data.frame(t(results))
+1492678641740:results[,3:9]<-sapply(3:9,function(i){results[,i]<-as.numeric(levels(results[,i])[results[,i]])})
+1492678642061:results<-results[,-(8:9)]
+1492678642560:results<-arrange(results,desc(Accuracy))
+1492678643045:results
+1492678643884:library(ggplot2)
+1492678644359:library(gridExtra)
+1492678646241:res<-data.frame(Model=results$Model,Accuracy=results$Accuracy,Speed=1/results$Model_Time_X,Overall=results$Accuracy/results$Model_Time_X)
+1492678647498:library(RColorBrewer)
+1492678647933:myPalette <- colorRampPalette(rev(brewer.pal(12, "Set3")))
+1492678648089:sc <- scale_colour_gradientn(colours = myPalette(256), limits=c(0.8, 1))
+1492678648843:kable(res)
+1492678649300:g<-ggplot(res,aes(x=reorder(Model,-Accuracy),y=Accuracy,fill=Model))+
+1492678649301:geom_bar(stat="identity")+
+1492678649302:coord_polar(theta="x",direction=1)+
+1492678649303:labs(x="Machine Learning Model",y="Prediction Accuracy")+
+1492678649303:theme(legend.position="bottom",legend.box="horizontal")+
+1492678649304:ggtitle('Car Evaluation Dataset Accuracy Performance')
+1492678649449:g
+1492678649622:write.csv(tal_eval,file="mydata10.csv")
+1492678663402:mbm<-microbenchmark(
+1492678663403:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492678663404:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492678663405:m3<-lda(fmla,data=tal_eval),
+1492678663405:m4<-mda(fmla,data=tal_eval),
+1492678663406:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01))
+1492678778481:library(dplyr)
+1492678779389:models<-length(cm)
+1492678780870:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492678787115:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492678788170:mbm$x<-mbm$x/min(mbm$x)
+1492678788824:results<-sapply (1:models, function(i) {c(cm[[i]][[1]],cm[[i]][[2]],mbm$x[i],cm[[i]]$overall[1:6])})
+1492678789444:row.names(results)<-c("Description","Model","Model_Time_X",names(cm[[1]]$overall[1:6]))
+1492678789980:results<-as.data.frame(t(results))
+1492678790475:results[,3:9]<-sapply(3:9,function(i){results[,i]<-as.numeric(levels(results[,i])[results[,i]])})
+1492678790934:results<-results[,-(8:9)]
+1492678791470:results<-arrange(results,desc(Accuracy))
+1492678792067:results
+1492678798487:library(ggplot2)
+1492678799163:library(gridExtra)
+1492678799613:res<-data.frame(Model=results$Model,Accuracy=results$Accuracy,Speed=1/results$Model_Time_X,Overall=results$Accuracy/results$Model_Time_X)
+1492678799956:library(RColorBrewer)
+1492678800549:myPalette <- colorRampPalette(rev(brewer.pal(12, "Set3")))
+1492678801483:sc <- scale_colour_gradientn(colours = myPalette(256), limits=c(0.8, 1))
+1492678802394:kable(res)
+1492678802657:g<-ggplot(res,aes(x=reorder(Model,-Accuracy),y=Accuracy,fill=Model))+
+1492678802658:geom_bar(stat="identity")+
+1492678802658:coord_polar(theta="x",direction=1)+
+1492678802659:labs(x="Machine Learning Model",y="Prediction Accuracy")+
+1492678802660:theme(legend.position="bottom",legend.box="horizontal")+
+1492678802660:ggtitle('Car Evaluation Dataset Accuracy Performance')
+1492678803639:g
+1492679174396:library(h2o)
+1492679185760:install.packages(h2o)
+1492679190717:install.packages('h2o')
+1492679355086:localH2O=h2o.init(nthreads=-1)
+1492679359438:library(h2o)
+1492679361193:localH2O=h2o.init(nthreads=-1)
+1492679523691:install.packages("xgboost")
+1492679651696:model <- xgboost(data = tal_eval, y, max.depth = 2, eta = 1, nthread = 2, nround = 2, objective = "binary:logistic")
+1492679655412:library(xgboost)
+1492679659930:model <- xgboost(data = tal_eval, y, max.depth = 2, eta = 1, nthread = 2, nround = 2, objective = "binary:logistic")
+1492680092558:install.packages("xgboost")
+1492680101514:install.packages("xgboost")
+1492680202882:sudo R CMD javareconf
+1492680320380:library(h2o)
+1492680321218:localH2O=h2o.init(nthreads=-1)
+1492680336751:h2o.no_progress()
+1492680453964:tal_eval.hex=h2o.uploadFile(x)
+1492680502126:write.csv(x,file="tal_eval1.csv")
+1492680548143:tal_eval.hex=h2o.uploadFile(/home/peopleanalytics/Desktop/tal_eval1.csv)
+1492680600814:tal_eval.hex=h2o.uploadFile(path=paste0("/home/peopleanalytics/Desktop/tal_eval1.csv"))
+1492680676310:m20<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = car_eval.hex, variable_importances = TRUE),times=5)
+1492680688205:m20<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex)
+1492680724787:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex)
+1492680771757:prob<-predict(model,x,n.trees=5000,type="response")
+1492680784202:prob<-h2o.predict(model,x,n.trees=5000,type="response")
+1492680929780:prob<-h2o.predict(model,tal_eval.hex)
+1492680937256:prob
+1492680974317:prob<-h2o.predict(model,tal_eval.hex, type="class")
+1492680980219:prob
+1492680990044:pred<-apply(prob,1,which.max)
+1492681021169:pred<-apply(prob[,1],1,which.max)
+1492681036212:prob[,1]
+1492681062776:prob1<-as.data.matrix(prob[,1])
+1492681070416:prob1<-as.matrix(prob[,1])
+1492681090588:prob1<-as.numeric(prob1)
+1492681096678:prob<-h2o.predict(model,tal_eval.hex, type="class")
+1492681097840:prob1<-as.matrix(prob[,1])
+1492681106637:prob1<-as.factor(prob1)
+1492681109370:pred<-apply(prob[,1],1,which.max)
+1492681117181:pred<-apply(prob1,1,which.max)
+1492681124588:prob1
+1492681178807:prob<-h2o.predict(model,tal_eval.hex, type="class")
+1492681180177:prob1<-as.matrix(prob[,1])
+1492681189224:prob1<-as.matrix(prob[,1])
+1492681206639:table(prob1)
+1492681232663:prob<-h2o.predict(model,tal_eval.hex)
+1492681234121:prob1<-as.matrix(prob[,1])
+1492681236207:table(prob1)
+1492681253073:l<-union(prob1,y)
+1492681265277:mtab<-table(factor(prob1,l),factor(y,l))
+1492681273263:cm[[17]]<-c("Gradient Boosted Machine","GBM",confusionMatrix(mtab))
+1492681286901:library(caret)
+1492681293117:cm[[17]]<-c("Gradient Boosted Machine","GBM",confusionMatrix(mtab))
+1492681294594:cm[[17]]$table
+1492681296483:cm[[17]]$overall[1]
+1492681344032:table(prob1)
+1492681365095:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex)
+1492681374593:prob<-h2o.predict(model,tal_eval.hex)
+1492681377018:prob1<-as.matrix(prob[,1])
+1492681493696:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE,times=5)
+1492681511187:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE,times=2)
+1492681518052:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492681525373:prob<-h2o.predict(model,tal_eval.hex)
+1492681526514:prob1<-as.matrix(prob[,1])
+1492681526851:table(prob1)
+1492681531440:l<-union(prob1,y)
+1492681532693:mtab<-table(factor(prob1,l),factor(y,l))
+1492681533555:cm[[17]]<-c("h2o Deep learning","DPL",confusionMatrix(mtab))
+1492681534031:cm[[17]]$table
+1492681534576:cm[[17]]$overall[1]
+1492681549534:h2o.shutdown(prompt = FALSE)
+1492681777225:tal_eval.hex
+1492681856516:library(h2o)
+1492681857217:localH2O=h2o.init(nthreads=-1)
+1492681863666:tal_eval.hex=h2o.uploadFile(path=paste0("/home/peopleanalytics/Desktop/tal_eval1.csv"))
+1492681867185:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492681874996:prob<-h2o.predict(model,tal_eval.hex)
+1492681919062:nv
+1492681921729:library(h2o)
+1492681922361:localH2O=h2o.init(nthreads=-1)
+1492681922773:h2o.no_progress()
+1492681923786:tal_eval.hex=h2o.uploadFile(path=paste0("/home/peopleanalytics/Desktop/tal_eval1.csv"))
+1492681928163:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492681948581:nv<-6
+1492681951470:library(h2o)
+1492681952048:localH2O=h2o.init(nthreads=-1)
+1492681952369:h2o.no_progress()
+1492681954658:tal_eval.hex=h2o.uploadFile(path=paste0("/home/peopleanalytics/Desktop/tal_eval1.csv"))
+1492681956004:model<-h2o.deeplearning(x=1:(nv-1), y=nv, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492681965477:prob<-h2o.predict(model,tal_eval.hex)
+1492681968360:prob1<-as.matrix(prob[,1])
+1492681969830:table(prob1)
+1492681971542:l<-union(prob1,y)
+1492681972262:mtab<-table(factor(prob1,l),factor(y,l))
+1492681972651:cm[[17]]<-c("h2o Deep learning","DPL",confusionMatrix(mtab))
+1492681972836:cm[[17]]$table
+1492681972986:cm[[17]]$overall[1]
+1492681973745:h2o.shutdown(prompt = FALSE)
+1492682019483:library(h2o)
+1492682020019:localH2O=h2o.init(nthreads=-1)
+1492682023788:h2o.no_progress()
+1492682025020:tal_eval.hex=h2o.uploadFile(path=paste0("/home/peopleanalytics/Desktop/tal_eval1.csv"))
+1492682026453:model<-h2o.deeplearning(x=1:(ne-1), y=ne, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492682030615:ne<-6
+1492682034267:model<-h2o.deeplearning(x=1:(ne-1), y=ne, training_frame = tal_eval.hex, variable_importances =TRUE)
+1492682042117:prob<-h2o.predict(model,tal_eval.hex)
+1492682043283:prob1<-as.matrix(prob[,1])
+1492682043445:table(prob1)
+1492682043816:l<-union(prob1,y)
+1492687843231:library(shiny)
+1492687859245:install.packages("shiny")
+1492687907074:setwd("~/Desktop/Tree Shiny2")
+1492687915642:library(shiny)
+1492687920464:runApp()
+1492687940841:install.packages("shinythemes")
+1492687954046:runApp()
+1492687982660:installed.packages("psych")
+1492687987409:install.packages("psych")
+1492688016321:library(psych)
+1492688020478:runApp()
+1492688038203:install.packages("ROCR")
+1492688069814:install.packages("MLmetrics")
+1492688080558:runApp()
+1492688283068:install.packages("rmarkdown")
+1492688308641:library(rmarkdown)
+1492688362727:runApp()
+1492688422922:installed.packages("knitter")
+1492688427601:installed.packages("knitter")
+1492688490971:installed.packages("knitr")
+1492688521969:install.packages("knitr")
+1492688525678:install.packages("knitr")
+1492688543687:library(knitr)
+1492688921574:install.packages("rsconnect")
+1492689099231:library(rsconnect)
+1492689113221:runApp()
+1492689120147:runApp()
+1492689127595:library(shiny)
+1492689137135:runApp()
+1492689443043:runApp()
+1492689500407:runApp()
+1492689958428:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492689962540:library(RCurl)
+1492689964328:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492689967526:y <- read.csv(text = x)
+1492689970316:head(y)
+1492690051604:set.seed(42)
+1492690053073:library(xgboost)
+1492690065547:str(y)
+1492690095505:dataset<-y[,2:7]
+1492690123138:model_xgb <- caret::train(class ~ .,
+1492690123140:data = dataset,
+1492690123141:method = "xgbTree",
+1492690123142:preProcess = c("scale", "center"),
+1492690123143:trControl = trainControl(method = "repeatedcv",
+1492690123144:number = 10,
+1492690123145:repeats = 10,
+1492690123146:savePredictions = TRUE,
+1492690123148:verboseIter = FALSE))
+1492690135991:library(caret)
+1492690138097:model_xgb <- caret::train(class ~ .,
+1492690138098:data = dataset,
+1492690138099:method = "xgbTree",
+1492690138100:preProcess = c("scale", "center"),
+1492690138100:trControl = trainControl(method = "repeatedcv",
+1492690138101:number = 10,
+1492690138102:repeats = 10,
+1492690138103:savePredictions = TRUE,
+1492690138103:verboseIter = FALSE))
+1492690189946:set.seed(42)
+1492690190819:index <- createDataPartition(dataset$class, p = 0.7, list = FALSE)
+1492690198168:dataset<-y[,2:7]
+1492690199512:set.seed(42)
+1492690210507:dataset<-y
+1492690211336:set.seed(42)
+1492690211989:index <- createDataPartition(dataset$class, p = 0.7, list = FALSE)
+1492690213612:train_data <- dataset[index, ]
+1492690216395:test_data  <- dataset[-index, ]
+1492690241032:model_xgb <- caret::train(class ~ .,
+1492690241033:data = train_data,
+1492690241033:method = "xgbTree",
+1492690241034:preProcess = c("scale", "center"),
+1492690241034:trControl = trainControl(method = "repeatedcv",
+1492690241035:number = 10,
+1492690241036:repeats = 10,
+1492690241037:savePredictions = TRUE,
+1492690241038:verboseIter = FALSE))
+1492691109214:model_xgb <- caret::train(class ~ .,
+1492691109216:data = train_data,
+1492691109217:method = "xgbTree",
+1492691109218:preProcess = c("scale", "center"),
+1492691109219:trControl = trainControl(method = "repeatedcv",
+1492691109220:number = 10,
+1492691109221:repeats = 10,
+1492691109222:savePredictions = TRUE,
+1492691109223:verboseIter = FALSE))
+1492691133385:library(plyr)
+1492691136657:model_xgb <- caret::train(class ~ .,
+1492691136658:data = train_data,
+1492691136659:method = "xgbTree",
+1492691136660:preProcess = c("scale", "center"),
+1492691136661:trControl = trainControl(method = "repeatedcv",
+1492691136662:number = 10,
+1492691136663:repeats = 10,
+1492691136665:savePredictions = TRUE,
+1492691136666:verboseIter = FALSE))
+1492691168199:model_xgb <- caret::train(class ~ .,
+1492691168200:data = train_data,
+1492691168200:method = "xgbTree",
+1492691168201:preProcess = c("scale", "center"),
+1492691168202:trControl = trainControl(method = "repeatedcv",
+1492691168203:number = 3,
+1492691168204:repeats = 3,
+1492691168204:savePredictions = TRUE,
+1492691168205:verboseIter = FALSE))
+1492691308384:importance <- varImp(model_xgb, scale = TRUE)
+1492691310839:plot(importance)
+1492691327374:confusionMatrix(predict(model_xgb, test_data), test_data$Disengketakan)
+1492691339283:confusionMatrix(predict(model_xgb, test_data), test_data$class)
+1492691367439:results <- data.frame(actual = test_data$class,predict(model_xgb, test_data, type = "prob"))
+1492691374757:results
+1492691436009:table(results)
+1492691444370:table(results[,1])
+1492691482341:library(caret)
+1492691508315:confusionMatrix(results[,1],test_data$class)
+1492691779744:confusionMatrix(predict(model_xgb, train_data), train_data$class)
+1492691869557:pred1<-redict(model_xgb, train_data)
+1492691875276:pred1<-predict(model_xgb, train_data)
+1492691879020:pred1
+1492691998554:library(xgboost)
+1492692002059:model_xgb <- caret::train(class ~ .,
+1492692002060:data = tal_eval,
+1492692002061:method = "xgbTree",
+1492692002061:preProcess = c("scale", "center"),
+1492692002062:trControl = trainControl(method = "repeatedcv",
+1492692002062:number = 10,
+1492692002062:repeats = 10,
+1492692002063:savePredictions = TRUE,
+1492692002063:verboseIter = FALSE))
+1492692015959:library('stringr')
+1492692016926:library('knitr')
+1492692017320:library(RCurl)
+1492692017812:library("e1071")
+1492692019064:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492692022530:y <- read.csv(text = x)
+1492692023330:head(y)
+1492692031721:set.seed(123)
+1492692032422:tal_eval<-y
+1492692035991:tal_eval<-tal_eval[,2:8]
+1492692052963:model_xgb <- caret::train(class ~ .,
+1492692052964:data = tal_eval,
+1492692052965:method = "xgbTree",
+1492692052965:preProcess = c("scale", "center"),
+1492692052966:trControl = trainControl(method = "repeatedcv",
+1492692052967:number = 10,
+1492692052967:repeats = 10,
+1492692052968:savePredictions = TRUE,
+1492692052969:verboseIter = FALSE))
+1492692068862:model_xgb <- caret::train(class ~ .,
+1492692068863:data = tal_eval,
+1492692068864:method = "xgbTree",
+1492692068865:preProcess = c("scale", "center"),
+1492692068865:trControl = trainControl(method = "repeatedcv",
+1492692068866:number = 3,
+1492692068867:repeats = 3,
+1492692068868:savePredictions = TRUE,
+1492692068868:verboseIter = FALSE))
+1492692565727:importance <- varImp(model_xgb, scale = TRUE)
+1492692568346:plot(importance)
+1492692573753:confusionMatrix(predict(model_xgb, test_data), test_data$Disengketakan)
+1492692661350:confusionMatrix(predict(model_xgb, x), x$class)
+1492692706790:confusionMatrix(predict(model_xgb, x), y)
+1492692724264:str(x)
+1492692756655:tal_eval<-y
+1492692757513:tal_eval<-tal_eval[,2:8]
+1492692758868:nv <- length(tal_eval) # number of attributes
+1492692760382:nv
+1492692786493:x<-tal_eval[,1:(nv-1)]
+1492692787245:y<-tal_eval[,nv]
+1492692792729:head(x)
+1492692800215:head(y)
+1492692823279:confusionMatrix(predict(model_xgb, x), y)
+1492692895329:table(predict(model_xgb, x), y)
+1492692902708:confusionMatrix(predict(model_xgb, x), y)
+1492692928585:results <- data.frame(actual = y,predict(model_xgb, x, type = "prob"))
+1492692934921:confusionMatrix(predict(model_xgb, x), y)
+1492693046802:cm[[20]]<-c("XGB","XGB",confusionMatrix(predict(model_xgb, x), y))
+1492693065876:cm<-list()
+1492693083832:cm[[20]]<-c("XGB","XGB",confusionMatrix(predict(model_xgb, x), y))
+1492693259042:cm[[17]]$table
+1492693363901:mtab<-table(predict(model_xgb, x), y)
+1492693377291:cm[[20]]<-c("XGB","XGB",confusionMatrix(mtab)
+1492693377291:cm[[17]]$table
+1492693377297:#Step 4. Performance Comparison
+1492693377297:library(microbenchmark)
+1492693377318:mbm<-microbenchmark(
+1492693377318:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492693377319:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492693377319:m3<-lda(fmla,data=tal_eval),
+1492693377319:m4<-mda(fmla,data=tal_eval),
+1492693377320:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492693377320:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492693377320:m7<-fda(fmla,data=tal_eval),
+1492693377321:m8<-ksvm(fmla,data=tal_eval),
+1492693377321:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492693377321:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492693377322:m11<-rpart(fmla,data=tal_eval),
+1492693377322:m12<-OneR(fmla,data=tal_eval),
+1492693377322:m13<-J48(fmla,data=tal_eval),
+1492693377323:m14<-PART(fmla,data=tal_eval),
+1492693377323:m15<-bagging(fmla,data=tal_eval),
+1492693377323:m16<-randomForest(fmla,data=tal_eval),
+1492693377324:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492693377324:m19<-JRip(fmla,data=tal_eval))
+1492693377532:mbm<-microbenchmark(
+1492693377532:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492693377532:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492693377533:m3<-lda(fmla,data=tal_eval),
+1492693377533:m4<-mda(fmla,data=tal_eval),
+1492693377533:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01))
+1492693377735:mbm2<-microbenchmark(
+1492693377736:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492693377736:m7<-fda(fmla,data=tal_eval),
+1492693377736:m8<-ksvm(fmla,data=tal_eval),
+1492693377736:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492693377737:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1))
+1492693377933:mbm3<-microbenchmark(
+1492693377933:m11<-rpart(fmla,data=tal_eval),
+1492693377934:m12<-OneR(fmla,data=tal_eval),
+1492693377934:m13<-J48(fmla,data=tal_eval),
+1492693377934:m14<-PART(fmla,data=tal_eval),
+1492693377934:m15<-bagging(fmla,data=tal_eval))
+1492693378168:m17<-gbm(fmla,data=tal_eval,n.trees=5000,interaction.depth=nlev,shrinkage=0.001,bag.fraction=0.8,distribution="multinomial",verbose=FALSE,n.cores=4),
+1492693378168:mbm4<-microbenchmark(
+1492693378169:m15<-bagging(fmla,data=tal_eval),
+1492693378169:m16<-randomForest(fmla,data=tal_eval),
+1492693378169:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492693378170:m19<-JRip(fmla,data=tal_eval))
+1492693378362:m17<-gbm(fmla,data=tal_eval,n.trees=5000,interaction.depth=nlev,shrinkage=0.001,bag.fraction=0.8,distribution="multinomial",verbose=FALSE,n.cores=4)
+1492693378363:library(dplyr)
+1492693378500:models<-length(cm)
+1492693378501:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492693378502:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492693378502:mbm$x<-mbm$x/min(mbm$x)
+1492693378503:results<-sapply (1:models, function(i) {c(cm[[i]][[1]],cm[[i]][[2]],mbm$x[i],cm[[i]]$overall[1:6])})
+1492693378504:row.names(results)<-c("Description","Model","Model_Time_X",names(cm[[1]]$overall[1:6]))
+1492693378505:results<-as.data.frame(t(results))
+1492693378592:results[,3:9]<-sapply(3:9,function(i){results[,i]<-as.numeric(levels(results[,i])[results[,i]])})
+1492693378595:results<-results[,-(8:9)]
+1492693378596:results<-arrange(results,desc(Accuracy))
+1492693378729:results
+1492693379108:library(ggplot2)
+1492693379108:library(gridExtra)
+1492693379133:res<-data.frame(Model=results$Model,Accuracy=results$Accuracy,Speed=1/results$Model_Time_X,Overall=results$Accuracy/results$Model_Time_X)
+1492693379135:library(RColorBrewer)
+1492693379155:myPalette <- colorRampPalette(rev(brewer.pal(12, "Set3")))
+1492693379159:sc <- scale_colour_gradientn(colours = myPalette(256), limits=c(0.8, 1))
+1492693379162:kable(res)
+1492693379169:g<-ggplot(res,aes(x=reorder(Model,-Accuracy),y=Accuracy,fill=Model))+
+1492693379170:geom_bar(stat="identity")+
+1492693379170:coord_polar(theta="x",direction=1)+
+1492693379170:labs(x="Machine Learning Model",y="Prediction Accuracy")+
+1492693379171:theme(legend.position="bottom",legend.box="horizontal")+
+1492693379171:ggtitle('Car Evaluation Dataset Accuracy Performance')
+1492693379181:g
+1492693420454:cm[[20]]<-c("XGB","XGB",confusionMatrix(mtab))
+1492693425920:cm[[20]]$table
+1492693457353:cm[[20]]$overall[1]
+1492693980345:cm
+1492694012056:library(microbenchmark)
+1492694013721:mbm<-microbenchmark(
+1492694013722:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694013723:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694013723:m3<-lda(fmla,data=tal_eval),
+1492694013724:m4<-mda(fmla,data=tal_eval),
+1492694013724:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694013724:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694013725:m7<-fda(fmla,data=tal_eval),
+1492694013725:m8<-ksvm(fmla,data=tal_eval),
+1492694013725:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694013726:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694013726:m11<-rpart(fmla,data=tal_eval),
+1492694013727:m12<-OneR(fmla,data=tal_eval),
+1492694013727:m13<-J48(fmla,data=tal_eval),
+1492694013727:m14<-PART(fmla,data=tal_eval),
+1492694013728:m15<-bagging(fmla,data=tal_eval),
+1492694013728:m16<-randomForest(fmla,data=tal_eval),
+1492694013729:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694013729:m19<-JRip(fmla,data=tal_eval)),
+1492694013730:m20<-caret::train(class ~ .,data = tal_eval,
+1492694013731:method = "xgbTree",
+1492694013731:preProcess = c("scale", "center"),
+1492694013731:trControl = trainControl(method = "repeatedcv",
+1492694013732:number = 3,
+1492694013732:repeats = 3,
+1492694013733:savePredictions = TRUE,
+1492694013733:verboseIter = FALSE))
+1492694069470:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694069470:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694069471:m3<-lda(fmla,data=tal_eval),
+1492694069471:m4<-mda(fmla,data=tal_eval),
+1492694069471:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694069472:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694069472:m7<-fda(fmla,data=tal_eval),
+1492694069472:m8<-ksvm(fmla,data=tal_eval),
+1492694069473:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694069473:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694069473:m11<-rpart(fmla,data=tal_eval),
+1492694069474:m12<-OneR(fmla,data=tal_eval),
+1492694069474:m13<-J48(fmla,data=tal_eval),
+1492694069474:m14<-PART(fmla,data=tal_eval),
+1492694069475:m15<-bagging(fmla,data=tal_eval),
+1492694069475:m16<-randomForest(fmla,data=tal_eval),
+1492694069475:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694069476:m19<-JRip(fmla,data=tal_eval)),
+1492694069476:m20<-caret::train(class ~ .,data = tal_eval,
+1492694069476:method = "xgbTree",
+1492694069477:preProcess = c("scale", "center"),
+1492694069477:trControl = trainControl(method = "repeatedcv",
+1492694069477:number = 3,
+1492694069478:repeats = 3,
+1492694069478:savePredictions = TRUE,
+1492694069478:verboseIter = FALSE))
+1492694097851:library(RWeka)
+1492694099340:model<-JRip(fmla,data=tal_eval)
+1492694112104:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492694112619:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492694112891:fmla<-as.formula(fmla)
+1492694113333:fmla
+1492694115118:nlev<-nlevels(y) # number of factors describing class
+1492694116157:nlev
+1492694127266:library(RWeka)
+1492694128016:model<-JRip(fmla,data=tal_eval)
+1492694129710:pred<-predict(model,x)
+1492694130412:l<-union(pred,y)
+1492694131056:mtab<-table(factor(pred,l),factor(y,l))
+1492694131520:cm[[19]]<-c("JRip","JRIP",confusionMatrix(mtab))
+1492694132093:cm[[19]]$table
+1492694133156:cm[[19]]$overall[1]
+1492694148181:library(microbenchmark)
+1492694148183:mbm<-microbenchmark(
+1492694148183:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694148184:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694148185:m3<-lda(fmla,data=tal_eval),
+1492694148185:m4<-mda(fmla,data=tal_eval),
+1492694148186:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694148187:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694148187:m7<-fda(fmla,data=tal_eval),
+1492694148188:m8<-ksvm(fmla,data=tal_eval),
+1492694148189:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694148189:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694148190:m11<-rpart(fmla,data=tal_eval),
+1492694148191:m12<-OneR(fmla,data=tal_eval),
+1492694148191:m13<-J48(fmla,data=tal_eval),
+1492694148192:m14<-PART(fmla,data=tal_eval),
+1492694148193:m15<-bagging(fmla,data=tal_eval),
+1492694148194:m16<-randomForest(fmla,data=tal_eval),
+1492694148194:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694148195:m19<-JRip(fmla,data=tal_eval)),
+1492694148196:m20<-caret::train(class ~ .,data = tal_eval,
+1492694148196:method = "xgbTree",
+1492694148197:preProcess = c("scale", "center"),
+1492694148197:trControl = trainControl(method = "repeatedcv",
+1492694148198:number = 3,
+1492694148199:repeats = 3,
+1492694148199:savePredictions = TRUE,
+1492694148200:verboseIter = FALSE))
+1492694182544:mbm<-microbenchmark(
+1492694182544:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694182545:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694182546:m3<-lda(fmla,data=tal_eval),
+1492694182546:m4<-mda(fmla,data=tal_eval),
+1492694182547:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694182547:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694182548:m7<-fda(fmla,data=tal_eval),
+1492694182549:m8<-ksvm(fmla,data=tal_eval),
+1492694182549:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694182550:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694182551:m11<-rpart(fmla,data=tal_eval),
+1492694182551:m12<-OneR(fmla,data=tal_eval),
+1492694182552:m13<-J48(fmla,data=tal_eval),
+1492694182553:m14<-PART(fmla,data=tal_eval),
+1492694182553:m15<-bagging(fmla,data=tal_eval),
+1492694182554:m16<-randomForest(fmla,data=tal_eval),
+1492694182555:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694182556:m19<-JRip(fmla,data=tal_eval),
+1492694182556:m20<-caret::train(class ~ .,data = tal_eval,
+1492694182557:method = "xgbTree",
+1492694182558:preProcess = c("scale", "center"),
+1492694182558:trControl = trainControl(method = "repeatedcv",
+1492694182559:number = 3,
+1492694182559:repeats = 3,
+1492694182560:savePredictions = TRUE,
+1492694182561:verboseIter = FALSE))
+1492694182562:library(dplyr)
+1492694182563:models<-length(cm)
+1492694182563:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492694182564:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492694182565:mbm$x<-mbm$x/min(mbm$x)
+1492694182565:results<-sapply (1:models, function(i) {c(cm[[i]][[1]],cm[[i]][[2]],mbm$x[i],cm[[i]]$overall[1:6])})
+1492694182566:row.names(results)<-c("Description","Model","Model_Time_X",names(cm[[1]]$overall[1:6]))
+1492694182567:results<-as.data.frame(t(results))
+1492694182624:results[,3:9]<-sapply(3:9,function(i){results[,i]<-as.numeric(levels(results[,i])[results[,i]])})
+1492694182628:results<-results[,-(8:9)]
+1492694182628:results<-arrange(results,desc(Accuracy))
+1492694182636:results
+1492694182682:library(ggplot2)
+1492694182683:library(gridExtra)
+1492694182683:res<-data.frame(Model=results$Model,Accuracy=results$Accuracy,Speed=1/results$Model_Time_X,Overall=results$Accuracy/results$Model_Time_X)
+1492694182684:library(RColorBrewer)
+1492694182685:myPalette <- colorRampPalette(rev(brewer.pal(12, "Set3")))
+1492694182686:sc <- scale_colour_gradientn(colours = myPalette(256), limits=c(0.8, 1))
+1492694182687:kable(res)
+1492694182690:g<-ggplot(res,aes(x=reorder(Model,-Accuracy),y=Accuracy,fill=Model))+
+1492694182690:geom_bar(stat="identity")+
+1492694182690:coord_polar(theta="x",direction=1)+
+1492694182691:labs(x="Machine Learning Model",y="Prediction Accuracy")+
+1492694182691:theme(legend.position="bottom",legend.box="horizontal")+
+1492694182691:ggtitle('Car Evaluation Dataset Accuracy Performance')
+1492694182697:g
+1492694199102:library(microbenchmark)
+1492694200925:mbm<-microbenchmark(
+1492694200926:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694200927:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694200928:m3<-lda(fmla,data=tal_eval),
+1492694200929:m4<-mda(fmla,data=tal_eval),
+1492694200930:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694200931:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694200932:m7<-fda(fmla,data=tal_eval),
+1492694200933:m8<-ksvm(fmla,data=tal_eval),
+1492694200934:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694200935:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694200936:m11<-rpart(fmla,data=tal_eval),
+1492694200937:m12<-OneR(fmla,data=tal_eval),
+1492694200939:m13<-J48(fmla,data=tal_eval),
+1492694200939:m14<-PART(fmla,data=tal_eval),
+1492694200940:m15<-bagging(fmla,data=tal_eval),
+1492694200941:m16<-randomForest(fmla,data=tal_eval),
+1492694200941:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694200942:m19<-JRip(fmla,data=tal_eval),
+1492694200943:m20<-caret::train(class ~ .,data = tal_eval,
+1492694200944:method = "xgbTree",
+1492694200945:preProcess = c("scale", "center"),
+1492694200945:trControl = trainControl(method = "repeatedcv",
+1492694200946:number = 3,
+1492694200947:repeats = 3,
+1492694200947:savePredictions = TRUE,
+1492694200947:verboseIter = FALSE))
+1492694200950:library(dplyr)
+1492694200951:models<-length(cm)
+1492694200952:mbm$expr<-rep(sapply(1:models, function(i) {cm[[i]][[2]]}),5)
+1492694200953:mbm<-aggregate(x=mbm$time,by=list(Model=mbm$expr),FUN=mean)
+1492694200954:mbm$x<-mbm$x/min(mbm$x)
+1492694200955:results<-sapply (1:models, function(i) {c(cm[[i]][[1]],cm[[i]][[2]],mbm$x[i],cm[[i]]$overall[1:6])})
+1492694200957:row.names(results)<-c("Description","Model","Model_Time_X",names(cm[[1]]$overall[1:6]))
+1492694200959:results<-as.data.frame(t(results))
+1492694201074:results[,3:9]<-sapply(3:9,function(i){results[,i]<-as.numeric(levels(results[,i])[results[,i]])})
+1492694201077:results<-results[,-(8:9)]
+1492694201077:results<-arrange(results,desc(Accuracy))
+1492694201207:results
+1492694201528:library(ggplot2)
+1492694201528:library(gridExtra)
+1492694201529:res<-data.frame(Model=results$Model,Accuracy=results$Accuracy,Speed=1/results$Model_Time_X,Overall=results$Accuracy/results$Model_Time_X)
+1492694201531:library(RColorBrewer)
+1492694201532:myPalette <- colorRampPalette(rev(brewer.pal(12, "Set3")))
+1492694201533:sc <- scale_colour_gradientn(colours = myPalette(256), limits=c(0.8, 1))
+1492694201535:kable(res)
+1492694201538:g<-ggplot(res,aes(x=reorder(Model,-Accuracy),y=Accuracy,fill=Model))+
+1492694201539:geom_bar(stat="identity")+
+1492694201539:coord_polar(theta="x",direction=1)+
+1492694201540:labs(x="Machine Learning Model",y="Prediction Accuracy")+
+1492694201540:theme(legend.position="bottom",legend.box="horizontal")+
+1492694201541:ggtitle('Car Evaluation Dataset Accuracy Performance')
+1492694201548:g
+1492694227260:mbm<-microbenchmark(
+1492694227261:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694227262:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694227263:m3<-lda(fmla,data=tal_eval),
+1492694227264:m4<-mda(fmla,data=tal_eval),
+1492694227265:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694227265:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694227266:m7<-fda(fmla,data=tal_eval),
+1492694227267:m8<-ksvm(fmla,data=tal_eval),
+1492694227268:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694227268:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694227269:m11<-rpart(fmla,data=tal_eval),
+1492694227270:m12<-OneR(fmla,data=tal_eval),
+1492694227271:m13<-J48(fmla,data=tal_eval),
+1492694227272:m14<-PART(fmla,data=tal_eval),
+1492694227272:m15<-bagging(fmla,data=tal_eval),
+1492694227273:m16<-randomForest(fmla,data=tal_eval),
+1492694227274:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694227275:m19<-JRip(fmla,data=tal_eval),
+1492694227275:m20<-caret::train(class ~ .,data = tal_eval,
+1492694227276:method = "xgbTree",
+1492694227277:preProcess = c("scale", "center"),
+1492694227278:trControl = trainControl(method = "repeatedcv",
+1492694227279:number = 3,
+1492694227279:repeats = 3,
+1492694227280:savePredictions = TRUE,
+1492694227281:verboseIter = FALSE))
+1492694235392:)
+1492694280760:library('stringr')
+1492694280762:library('knitr')
+1492694280763:library(RCurl)
+1492694280764:library("e1071")
+1492694280765:x <- getURL("https://raw.githubusercontent.com/Abuamany/People-Analytics/master/mydata10.csv")
+1492694286519:y <- read.csv(text = x)
+1492694286532:head(y)
+1492694286544:set.seed(123)
+1492694286547:tal_eval<-y
+1492694286549:tal_eval<-tal_eval[,2:8]
+1492694286551:nv <- length(tal_eval) # number of attributes
+1492694286552:nv
+1492694286553:cm<-list()
+1492694286555:x<-tal_eval[,1:(nv-1)]
+1492694286557:y<-tal_eval[,nv]
+1492694286560:head(y)
+1492694286565:fmla<-paste(colnames(tal_eval)[1:(nv-1)],collapse="+")
+1492694286566:fmla<-paste0(colnames(tal_eval)[nv],"~",fmla)
+1492694286568:fmla<-as.formula(fmla)
+1492694286571:fmla
+1492694286573:nlev<-nlevels(y) # number of factors describing class
+1492694286575:nlev
+1492694286578:#Multinominal
+1492694286579:library(nnet)
+1492694286607:library(caret)
+1492694286608:model<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE)
+1492694286936:prob<-predict(model,x,type="probs")
+1492694286946:pred<-apply(prob,1,which.max)
+1492694286957:pred[which(pred=="1")]<-levels(y)[1]
+1492694286959:pred[which(pred=="2")]<-levels(y)[2]
+1492694286960:pred[which(pred=="3")]<-levels(y)[3]
+1492694286960:pred[which(pred=="4")]<-levels(y)[4]
+1492694286961:pred<-as.factor(pred)
+1492694286962:l<-union(pred,y)
+1492694286963:mtab<-table(factor(pred,l),factor(y,l))
+1492694286964:mtab
+1492694286965:cm[[1]]<-c("Multinomial","MULTINOM",confusionMatrix(mtab))
+1492694286977:cm[[1]]$table
+1492694286979:cm[[1]]$overall[1]
+1492694286979:#Logistic Regression
+1492694286980:library(VGAM)
+1492694287151:model<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100)
+1492694287888:prob<-predict(model,x,type="response")
+1492694287916:pred<-apply(prob,1,which.max)
+1492694287923:pred[which(pred=="1")]<-levels(y)[1]
+1492694287924:pred[which(pred=="2")]<-levels(y)[2]
+1492694287925:pred[which(pred=="3")]<-levels(y)[3]
+1492694287925:pred[which(pred=="4")]<-levels(y)[4]
+1492694287926:pred<-as.factor(pred)
+1492694287926:l<-union(pred,y)
+1492694287927:mtab<-table(factor(pred,l),factor(y,l))
+1492694287928:cm[[2]]<-c("Logistic Regression","GLM",confusionMatrix(mtab))
+1492694287940:cm[[2]]$table
+1492694287941:cm[[2]]$overall[1]
+1492694287942:#Linear Discriminant Analysis
+1492694287942:library(MASS)
+1492694287961:model<-lda(fmla,data=tal_eval)
+1492694287972:pred<-predict(model,x)$class
+1492694287988:l<-union(pred,y)
+1492694287988:mtab<-table(factor(pred,l),factor(y,l))
+1492694287989:cm[[3]]<-c("Linear Discriminant Analysis","LDA",confusionMatrix(mtab))
+1492694288003:cm[[3]]$table
+1492694288004:cm[[3]]$overall[1]
+1492694288005:#Non-Linear Classification
+1492694288005:library(mda)
+1492694288045:model<-mda(fmla,data=tal_eval)
+1492694288150:pred<-predict(model,x)
+1492694288163:l<-union(pred,y)
+1492694288164:mtab<-table(factor(pred,l),factor(y,l))
+1492694288165:cm[[4]]<-c("Mixture Discriminant Analysis","MDA",confusionMatrix(mtab))
+1492694288178:cm[[4]]$table
+1492694288180:cm[[4]]$overall[1]
+1492694288180:#Regularized Discriminant Analysis
+1492694288181:library(klaR)
+1492694288205:model<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01)
+1492694288360:pred<-predict(model,x)$class
+1492694288507:l<-union(pred,y)
+1492694288508:mtab<-table(factor(pred,l),factor(y,l))
+1492694288509:cm[[5]]<-c("Regularized Discriminant Analysis","RDA",confusionMatrix(mtab))
+1492694288523:cm[[5]]$table
+1492694288524:cm[[5]]$overall[1]
+1492694288525:#Neural Netwrok
+1492694288525:library(nnet)
+1492694288525:library(devtools)
+1492694288834:library(reshape)
+1492694288856:model<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700, trace = FALSE)
+1492694291792:#import the function from Github
+1492694291792:source_url('https://gist.githubusercontent.com/Peque/41a9e20d6687f2f3108d/raw/85e14f3a292e126f1454864427e3a189c2fe33f3/nnet_plot_update.r')
+1492694293245:plot.nnet(model, alpha.val = 0.5, cex= 0.7, circle.col = list('lightblue', 'white'), bord.col = 'black')
+1492694293386:pred<-predict(model,x,type="class")
+1492694293397:pred<-as.factor(pred)
+1492694293398:l<-union(pred,y)
+1492694293398:mtab<-table(factor(pred,l),factor(y,l))
+1492694293399:cm[[6]]<-c("Neural Network","NNET",confusionMatrix(mtab))
+1492694293413:cm[[6]]$table
+1492694293414:cm[[6]]$overall[1]
+1492694293415:#Flexible Discriminant Analysis
+1492694293415:library(mda)
+1492694293415:model<-fda(fmla,data=tal_eval)
+1492694293429:pred<-predict(model,x,type="class")
+1492694293436:l<-union(pred,y)
+1492694293436:mtab<-table(factor(pred,l),factor(y,l))
+1492694293496:cm[[7]]<-c("Flexible Discriminant Analysis","FDA",confusionMatrix(mtab))
+1492694293510:cm[[7]]$table
+1492694293511:cm[[7]]$overall[1]
+1492694293512:#Support Vector Machine
+1492694293512:library(kernlab)
+1492694293841:model<-ksvm(fmla,data=tal_eval)
+1492694294332:pred<-predict(model,x,type="response")
+1492694294583:l<-union(pred,y)
+1492694294584:mtab<-table(factor(pred,l),factor(y,l))
+1492694294585:cm[[8]]<-c("Support Vector Machine","SVM",confusionMatrix(mtab))
+1492694294597:cm[[8]]$table
+1492694294598:cm[[8]]$overall[1]
+1492694294599:#k-Nearest Neighbors
+1492694294599:library(caret)
+1492694294600:model<-knn3(fmla,data=tal_eval,k=nlev+1)
+1492694294605:pred<-predict(model,x,type="class")
+1492694294682:l<-union(pred,y)
+1492694294683:mtab<-table(factor(pred,l),factor(y,l))
+1492694294684:cm[[9]]<-c("k-Nearest Neighbors","KNN",confusionMatrix(mtab))
+1492694294697:cm[[9]]$table
+1492694294699:cm[[9]]$overall[1]
+1492694294699:#B8 Naive Bayes
+1492694294700:library(e1071)
+1492694294700:model<-naiveBayes(fmla,data=tal_eval,k=nlev+1)
+1492694294705:pred<-predict(model,x)
+1492694295137:l<-union(pred,y)
+1492694295137:mtab<-table(factor(pred,l),factor(y,l))
+1492694295138:cm[[10]]<-c("Naive Bayes","NBAYES",confusionMatrix(mtab))
+1492694295151:cm[[10]]$table
+1492694295152:cm[[10]]$overall[1]
+1492694295153:#3.C Non-Linear Classification with Decision Trees
+1492694295153:#3.C1 Classification and Regression Trees(CART)
+1492694295153:library(rpart)
+1492694295154:library(rpart.plot)
+1492694295154:model<-rpart(fmla,data=tal_eval)
+1492694295174:# prp(model, faclen=3)
+1492694295174:rpart.plot(model)
+1492694295431:pred<-predict(model, x ,type="class")
+1492694295438:l<-union(pred,y)
+1492694295439:mtab<-table(factor(pred,l),factor(y,l))
+1492694295440:cm[[11]]<-c("classification and Regression Trees","CART",confusionMatrix(mtab))
+1492694295452:cm[[11]]$table
+1492694295453:cm[[11]]$overall[1]
+1492694295454:#3.C2 OneR
+1492694295454:library(RWeka)
+1492694295455:model<-OneR(fmla,data=tal_eval)
+1492694295487:pred<-predict(model,x,type="class")
+1492694295516:l<-union(pred,y)
+1492694295517:mtab<-table(factor(pred,l),factor(y,l))
+1492694295518:cm[[12]]<-c("One R","ONE-R",confusionMatrix(mtab))
+1492694295710:cm[[12]]$table
+1492694295711:cm[[12]]$overall[1]
+1492694295712:#3.C3 C4.5
+1492694295712:library(RWeka)
+1492694295713:model<-J48(fmla,data=tal_eval)
+1492694295803:pred<-predict(model,x)
+1492694295854:l<-union(pred,y)
+1492694295855:mtab<-table(factor(pred,l),factor(y,l))
+1492694295856:cm[[13]]<-c("C4.5","C45",confusionMatrix(mtab))
+1492694295870:cm[[13]]$table
+1492694295871:cm[[12]]$overall[1]
+1492694295872:#3.C4 PART
+1492694295872:library(RWeka)
+1492694295873:model<-PART(fmla,data=tal_eval)
+1492694295983:pred<-predict(model,x)
+1492694296043:l<-union(pred,y)
+1492694296044:mtab<-table(factor(pred,l),factor(y,l))
+1492694296045:cm[[14]]<-c("PART","PART",confusionMatrix(mtab))
+1492694296062:cm[[14]]$table
+1492694296064:cm[[14]]$overall[1]
+1492694296065:#3.C5 Bagging CART
+1492694296065:library(ipred)
+1492694296158:model<-bagging(fmla,data=tal_eval)
+1492694296383:pred<-predict(model,x)
+1492694296432:l<-union(pred,y)
+1492694296433:mtab<-table(factor(pred,l),factor(y,l))
+1492694296434:cm[[15]]<-c("Bagging CART","BAG-CART",confusionMatrix(mtab))
+1492694296447:cm[[15]]$table
+1492694296449:cm[[15]]$overall[1]
+1492694296449:#3.C6 Random Forest
+1492694296450:library(randomForest)
+1492694296476:model<-randomForest(fmla,data=tal_eval)
+1492694296816:pred<-predict(model,x)
+1492694296859:l<-union(pred,y)
+1492694296860:mtab<-table(factor(pred,l),factor(y,l))
+1492694296861:cm[[16]]<-c("Random Forest","RF",confusionMatrix(mtab))
+1492694296874:cm[[16]]$table
+1492694296876:cm[[16]]$overall[1]
+1492694296876:#C7 Gradient Boosted Machine
+1492694296877:library(gbm)
+1492694296943:model<-gbm(fmla,data=tal_eval,n.trees=5000,interaction.depth=nlev,shrinkage=0.001,bag.fraction=0.8,distribution="multinomial",verbose=FALSE,n.cores=4)
+1492694312187:prob<-predict(model,x,n.trees=5000,type="response")
+1492694313417:pred<-apply(prob,1,which.max)
+1492694313423:pred[which(pred=="1")]<-levels(y)[1]
+1492694313424:pred[which(pred=="2")]<-levels(y)[2]
+1492694313425:pred[which(pred=="3")]<-levels(y)[3]
+1492694313425:pred[which(pred=="4")]<-levels(y)[4]
+1492694313425:pred<-as.factor(pred)
+1492694313426:l<-union(pred,y)
+1492694313427:mtab<-table(factor(pred,l),factor(y,l))
+1492694313428:cm[[17]]<-c("Gradient Boosted Machine","GBM",confusionMatrix(mtab))
+1492694313441:cm[[17]]$table
+1492694313442:cm[[17]]$overall[1]
+1492694313442:#C8 Boosted C5.0
+1492694313443:library(C50)
+1492694313483:model<-C5.0(fmla,data=tal_eval,trials=10)
+1492694313563:# tree <- rpart(model,data=tal_eval,control=rpart.control(minsplit=20,cp=0,digits=6))
+1492694313564:# prp(tree,faclen=3)
+1492694313564:pred<-predict(model,x)
+1492694313610:l<-union(pred,y)
+1492694313611:mtab<-table(factor(pred,l),factor(y,l))
+1492694313612:cm[[18]]<-c("Boosted C5.0","BOOST-C50",confusionMatrix(mtab))
+1492694313626:cm[[18]]$table
+1492694313627:cm[[18]]$overall[1]
+1492694313628:#3.C9 JRip
+1492694313628:library(RWeka)
+1492694313629:model<-JRip(fmla,data=tal_eval)
+1492694313896:pred<-predict(model,x)
+1492694313954:l<-union(pred,y)
+1492694313954:mtab<-table(factor(pred,l),factor(y,l))
+1492694313956:cm[[19]]<-c("JRip","JRIP",confusionMatrix(mtab))
+1492694313970:cm[[19]]$table
+1492694313972:cm[[19]]$overall[1]
+1492694330708:library(microbenchmark)
+1492694331768:mbm<-microbenchmark(
+1492694331769:m1<-multinom(fmla, data = tal_eval, maxit = 500, trace=FALSE),
+1492694331769:m2<-vglm(fmla, family = "multinomial", data = tal_eval, maxit = 100),
+1492694331770:m3<-lda(fmla,data=tal_eval),
+1492694331770:m4<-mda(fmla,data=tal_eval),
+1492694331771:m5<-rda(fmla,data=tal_eval,gamma = 0.05,lambda = 0.01),
+1492694331771:m6<-nnet(fmla,data=tal_eval,size = 4, decay = 0.0001, maxit = 700,trace=FALSE),
+1492694331772:m7<-fda(fmla,data=tal_eval),
+1492694331772:m8<-ksvm(fmla,data=tal_eval),
+1492694331773:m9<-knn3(fmla,data=tal_eval,k=nlev+1),
+1492694331774:m10<-naiveBayes(fmla,data=tal_eval,k=nlev+1),
+1492694331774:m11<-rpart(fmla,data=tal_eval),
+1492694331775:m12<-OneR(fmla,data=tal_eval),
+1492694331776:m13<-J48(fmla,data=tal_eval),
+1492694331776:m14<-PART(fmla,data=tal_eval),
+1492694331777:m15<-bagging(fmla,data=tal_eval),
+1492694331778:m16<-randomForest(fmla,data=tal_eval),
+1492694331779:m18<-C5.0(fmla,data=tal_eval,trials=10),
+1492694331780:m19<-JRip(fmla,data=tal_eval),
+1492694331781:m20<-caret::train(class ~ .,data = tal_eval,
+1492694331782:method = "xgbTree",
+1492694331783:preProcess = c("scale", "center"),
+1492694331783:trControl = trainControl(method = "repeatedcv",
+1492694331784:number = 3,
+1492694331784:repeats = 3,
+1492694331785:savePredictions = TRUE,
+1492694331785:verboseIter = FALSE)))

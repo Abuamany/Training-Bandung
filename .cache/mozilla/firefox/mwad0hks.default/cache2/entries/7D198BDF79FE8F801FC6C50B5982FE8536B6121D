@@ -1,0 +1,294 @@
+(function() {
+  angular.module('app.service.application', []).factory("ApplicationService", [
+    'APIService', '$auth', function(APIService, $auth) {
+      var ApplicationService;
+      return new (ApplicationService = (function() {
+        var MetricParamList;
+
+        function ApplicationService() {}
+
+        MetricParamList = (function() {
+          function MetricParamList() {
+            this.items = [];
+          }
+
+          MetricParamList.prototype.push = function(item) {
+            return this.items.push(item);
+          };
+
+          MetricParamList.prototype.toQueryString = function() {
+            var metrics;
+            return metrics = [];
+          };
+
+          return MetricParamList;
+
+        })();
+
+        ApplicationService.prototype.getApplication = function(id) {
+          return APIService.get('/applications/' + id);
+        };
+
+        ApplicationService.prototype.listApplications = function(count, offset, filters, order) {
+          if (count == null) {
+            count = 10;
+          }
+          if (offset == null) {
+            offset = 0;
+          }
+          if (filters == null) {
+            filters = {};
+          }
+          if (order == null) {
+            order = null;
+          }
+          filters = angular.extend(filters, {
+            type: 'shiny'
+          });
+          return APIService.list('/applications', count, offset, filters, order);
+        };
+
+        ApplicationService.prototype.purgeApplication = function(application) {
+          return APIService.post('/applications/' + application.id + '/purge');
+        };
+
+        ApplicationService.prototype.terminateApplication = function(application) {
+          return APIService.post('/applications/' + application.id + '/terminate');
+        };
+
+        ApplicationService.prototype.deployApplication = function(application, rebuild) {
+          if (rebuild == null) {
+            rebuild = false;
+          }
+          return APIService.post('/applications/' + application.id + '/deploy', '', {
+            params: {
+              rebuild: rebuild
+            }
+          });
+        };
+
+        ApplicationService.prototype.getLogs = function(application) {
+          return APIService.get('/applications/' + application.id + '/logs');
+        };
+
+        ApplicationService.prototype.getLogsUrl = function(application, count) {
+          if (count == null) {
+            count = 1500;
+          }
+          return APIService.getURL('/applications/' + application.id + '/logs') + "?count=" + count + "&auth=" + $auth.getToken();
+        };
+
+        ApplicationService.prototype.getMetrics = function(application, series, metrics, options) {
+          var m;
+          if (options == null) {
+            options = null;
+          }
+          metrics = ((function() {
+            var _i, _len, _results;
+            _results = [];
+            for (_i = 0, _len = metrics.length; _i < _len; _i++) {
+              m = metrics[_i];
+              _results.push('metric=' + m);
+            }
+            return _results;
+          })()).join('&');
+          return APIService.get('/applications/' + application.id + '/metrics/' + series + '?' + metrics, {
+            params: {
+              'interval': options.interval || '1h',
+              'from': options.from || null,
+              'until': options.until || null
+            }
+          });
+        };
+
+        ApplicationService.prototype.listAuthorized = function(application, count, offset, filters, order) {
+          if (count == null) {
+            count = 10;
+          }
+          if (offset == null) {
+            offset = 0;
+          }
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.list('/applications/' + application.id + '/authorization/', count, offset, filters, order);
+        };
+
+        ApplicationService.prototype.listInvited = function(application, count, offset, filters, order) {
+          if (count == null) {
+            count = 10;
+          }
+          if (offset == null) {
+            offset = 10;
+          }
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          filters = filters || {};
+          filters.app_id = application.id;
+          return APIService.list('/invitations/', count, offset, filters, order);
+        };
+
+        ApplicationService.prototype.listUsers = function(application, count, offset, filters, order) {
+          if (count == null) {
+            count = 10;
+          }
+          if (offset == null) {
+            offset = 0;
+          }
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.list('/applications/' + application.id + '/authorization/users/', count, offset, filters, order);
+        };
+
+        ApplicationService.prototype.listGroups = function(application, count, offset, filters, order) {
+          if (count == null) {
+            count = 10;
+          }
+          if (offset == null) {
+            offset = 0;
+          }
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.list('/applications/' + application.id + '/authorization/groups/', count, offset, filters, order);
+        };
+
+        ApplicationService.prototype.getAuthorized = function(application, filters, order) {
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.listAll('/applications/' + application.id + '/authorization/', 'authorization', filters, order);
+        };
+
+        ApplicationService.prototype.getInvited = function(application, filters, order) {
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          filters = filters || {};
+          filters.app_id = application.id;
+          return APIService.listAll('/invitations/', 'invitations', filters, order);
+        };
+
+        ApplicationService.prototype.getGroups = function(application, filters, order) {
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.listAll('/applications/' + application.id + '/authorization/groups/', 'groups', filters, order);
+        };
+
+        ApplicationService.prototype.getUsers = function(application, filters, order) {
+          if (filters == null) {
+            filters = null;
+          }
+          if (order == null) {
+            order = null;
+          }
+          return APIService.listAll('/applications/' + application.id + '/authorization/users/', 'users', filters, order);
+        };
+
+        ApplicationService.prototype.inviteUser = function(application, email, invite_email, invite_email_message) {
+          if (invite_email == null) {
+            invite_email = true;
+          }
+          if (invite_email_message == null) {
+            invite_email_message = null;
+          }
+          return APIService.post('/applications/' + application.id + '/authorization/users/', {
+            email: email,
+            invite_email: invite_email,
+            invite_email_message: invite_email_message
+          });
+        };
+
+        ApplicationService.prototype.cancelInvite = function(invite) {
+          return APIService["delete"]('/invitations/' + invite.id);
+        };
+
+        ApplicationService.prototype.resendInvite = function(invite, regenerate) {
+          if (regenerate == null) {
+            regenerate = true;
+          }
+          return APIService.post('/invitations/' + invite.id + '/send/', {
+            regenerate: regenerate
+          });
+        };
+
+        ApplicationService.prototype.removeUser = function(application, user) {
+          return APIService["delete"]('/applications/' + application.id + '/authorization/users/' + user.id);
+        };
+
+        ApplicationService.prototype.addUser = function(application, user) {
+          return APIService.put('/applications/' + application.id + '/authorization/users/' + user.id);
+        };
+
+        ApplicationService.prototype.getUsage = function(application, usage, options) {
+          if (options == null) {
+            options = null;
+          }
+          return APIService.get('/accounts/' + application.account_id + '/usage/' + usage, {
+            params: {
+              'application': application.id,
+              'interval': options.interval || '1h',
+              'from': options.from || null,
+              'until': options.until || null
+            }
+          });
+        };
+
+        ApplicationService.prototype.setProperty = function(application, property, value) {
+          return APIService.put('/applications/' + application.id + '/properties/' + property, value);
+        };
+
+        ApplicationService.prototype.setProperties = function(application, properties) {
+          return APIService.post('/applications/' + application.id + '/properties', properties);
+        };
+
+        return ApplicationService;
+
+      })());
+    }
+  ]);
+
+}).call(this);
+-	²ö*      Xø¢›Xø¢±=«zXøág   =    :http://www.shinyapps.io/admin/scripts/service/application.js necko:classified 1 strongly-framed 1 request-method GET response-head HTTP/1.1 200 OK
+Date: Thu, 20 Apr 2017 11:59:45 GMT
+Etag: "d0f4855cf5e1e880edb08c65620a82f9"
+Content-Length: 9376
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:19 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Date: Thu, 20 Apr 2017 11:59:45 GMT
+Etag: "d0f4855cf5e1e880edb08c65620a82f9"
+Content-Length: 9376
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:19 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 22150 net-response-time-onstop 22158   $ 

@@ -1,0 +1,1003 @@
+(function() {
+  angular.module('app.controllers.application', []).controller('ApplicationListCtrl', [
+    '$scope', '$routeParams', 'ApplicationService', 'ContainerService', function($scope, $routeParams, ApplicationService, ContainerService) {
+      $scope.loading = true;
+      $scope.currentPage = 1;
+      $scope.numApplicationsPerPage = 10;
+      $scope.numApplications = 0;
+      $scope.applications = [];
+      $scope.searchQuery = null;
+      if ($routeParams.status !== 'all') {
+        $scope.status = $routeParams.status;
+      } else {
+        $scope.status = null;
+      }
+      $scope.$watch('currentAccount', function(val) {
+        return $scope.refresh();
+      });
+      $scope.refresh = function() {
+        var count, filters, offset, order;
+        $scope.loading = true;
+        filters = {};
+        if ($scope.currentAccount) {
+          filters.account_id = $scope.currentAccount.id;
+        }
+        if ($scope.searchQuery) {
+          filters.name = [$scope.searchQuery, 'like'];
+        }
+        if ($scope.status) {
+          filters.status = $scope.status;
+        }
+        count = $scope.numApplicationsPerPage;
+        offset = $scope.numApplicationsPerPage * ($scope.currentPage - 1);
+        return ApplicationService.listApplications(count, offset, filters, order = [['deployment_id', 'desc']]).success(function(data) {
+          var application, _i, _len, _ref, _results;
+          $scope.loading = false;
+          $scope.numApplications = data.total;
+          $scope.applications = data.applications;
+          _ref = $scope.applications;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            application = _ref[_i];
+            _results.push((function(application) {
+              return ContainerService.listContainers(0, null, {
+                'deployment_id': application.deployment_id
+              }).success(function(data) {
+                return application.instances = data.total;
+              });
+            })(application));
+          }
+          return _results;
+        })["catch"](function(res) {
+          return $scope.loading = false;
+        });
+      };
+      $scope.onSearch = function() {
+        $scope.currentPage = 1;
+        return $scope.refresh();
+      };
+      $scope.onPageChange = function() {
+        return $scope.refresh();
+      };
+      $scope.onNumPerPageChange = function() {
+        $scope.currentPage = 1;
+        return $scope.refresh();
+      };
+      return $scope.refresh();
+    }
+  ]).controller('ApplicationPageCtrl', [
+    '$scope', '$q', '$location', 'ApplicationService', 'application', function($scope, $q, $location, ApplicationService, application) {
+      $scope.application = application;
+      $scope.refresh = function() {
+        var deferred;
+        deferred = $q.defer();
+        ApplicationService.getApplication($scope.application.id).success(function(data) {
+          angular.copy(data, $scope.application);
+          return deferred.resolve();
+        }).error(function(data) {
+          return deferred.reject(data);
+        });
+        return deferred.promise;
+      };
+      $scope.deleted = function() {
+        return $location.path('/applications/all');
+      };
+      return $scope.hasAuthenticationFeatureEntitlement = function() {
+        return $scope.currentAccount.subscription.entitlements.AuthenticationFeature.enabled;
+      };
+    }
+  ]).controller('ApplicationOverviewCtrl', [
+    '$scope', 'BundleService', '$window', '$notify', function($scope, BundleService, $window, $notify) {
+      return $scope.downloadBundle = function() {
+        return $scope.refresh().then(function() {
+          var bundle_id;
+          bundle_id = $scope.application.deployment.image.bundle.id;
+          return BundleService.getBundleDownloadUrl(bundle_id).success(function(data) {
+            return $window.location.href = data['bundle_url'];
+          }).error(function(data) {
+            return $notify.logError("Error downloading application bundle");
+          });
+        });
+      };
+    }
+  ]).controller('ApplicationUsageWidgetCtrl', [
+    '$scope', 'ApplicationService', function($scope, ApplicationService) {
+      $scope.loading = true;
+      $scope.usageChartData = [];
+      $scope.usageChartOptions = {
+        colors: [$scope.color.primary, $scope.color.infoAlt],
+        grid: {
+          show: true,
+          color: "#eeeeee",
+          hoverable: true,
+          clickable: true,
+          tickColor: "#f9f9f9",
+          borderWidth: 1,
+          borderColor: "#eeeeee"
+        },
+        tooltip: false,
+        xaxis: {
+          mode: "time",
+          tickSize: [24, "hour"]
+        }
+      };
+      return ApplicationService.getUsage($scope.application, 'hours', {
+        interval: '1h',
+        'from': '30d'
+      }).success(function(data) {
+        var hours, i, r, series, time, _i, _len, _ref;
+        series = {
+          data: [],
+          bars: {
+            show: true,
+            barWidth: 3600000,
+            align: 'center'
+          }
+        };
+        if (data["application-" + $scope.application.id] !== void 0) {
+          _ref = data["application-" + $scope.application.id];
+          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            r = _ref[i];
+            time = r[0];
+            hours = r[1];
+            series.data.push([time, hours]);
+          }
+          $scope.usageChartData.push(series);
+          return $scope.loading = false;
+        }
+      });
+    }
+  ]).controller('ApplicationContainersWidgetCtrl', [
+    '$scope', 'ApplicationService', 'ContainerService', 'TaskService', '$notify', '$analytics', function($scope, ApplicationService, ContainerService, TaskService, $notify, $analytics) {
+      $analytics.pageTrack('/application/overview');
+      $scope.getInstances = function() {
+        return ContainerService.listContainers(null, null, {
+          'deployment_id': $scope.application.deployment_id
+        }).success(function(data) {
+          var container, _i, _len, _ref;
+          _ref = data.containers;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            container = _ref[_i];
+            if (container.starting == null) {
+              container.starting = false;
+            }
+            if (container.stopping == null) {
+              container.stopping = false;
+            }
+          }
+          return $scope.containers = data.containers;
+        });
+      };
+      $scope.startInstance = function(container) {
+        container.starting = true;
+        return ContainerService.startContainer(container.id).success(function(data) {
+          return TaskService.watchTask(data['id']).then(function(task) {
+            $notify.log("Instance " + container.id + " started");
+            $scope.getInstances()["finally"](function() {
+              return container.starting = false;
+            });
+            return $scope.refresh();
+          }, function(data) {
+            $notify.logError("Error starting instance " + container.id);
+            return container.starting = false;
+          });
+        });
+      };
+      $scope.stopInstance = function(container) {
+        container.stopping = true;
+        return ContainerService.stopContainer(container.id).success(function(data) {
+          return TaskService.watchTask(data['id']).then(function(task) {
+            $notify.log("Instance " + container.id + " stopped");
+            $scope.getInstances()["finally"](function() {
+              return container.stopping = false;
+            });
+            return $scope.refresh();
+          }, function(data) {
+            $notify.logError("Error stopping instance " + container.id);
+            return container.stopping = false;
+          });
+        });
+      };
+      $scope.removeInstance = function(i) {
+        var container;
+        container = $scope.containers[i];
+        return ContainerService.deleteContainer(container.id).success(function(data) {
+          return $scope.containers.splice(i, 1);
+        }).error(function(data) {
+          if (data.error) {
+            return $notify.logError(data.error);
+          } else {
+            return $notify.logError("Error removing instance.");
+          }
+        });
+      };
+      $scope.addInstance = function() {
+        return ContainerService.createContainer($scope.application.id, $scope.application.deployment_id, $scope.application.deployment.properties['application.instances.template']).success(function(data) {
+          return $scope.containers.push(data);
+        }).error(function(data) {
+          if (data.error) {
+            return $notify.logError(data.error);
+          } else {
+            return $notify.logError("Error creating new instance.");
+          }
+        });
+      };
+      return $scope.getInstances();
+    }
+  ]).controller('ApplicationDeployCtrl', [
+    '$scope', '$modal', '$notify', 'ApplicationService', function($scope, $modal, $notify, ApplicationService) {
+      $scope.canRestart = function(app) {
+        var _ref;
+        return (_ref = app.status) === 'running' || _ref === 'sleeping';
+      };
+      $scope.canRestore = function(app) {
+        var _ref;
+        return (_ref = app.status) === 'terminated';
+      };
+      return $scope.deployApp = function(app, rebuild, autoclose, callback) {
+        if (rebuild == null) {
+          rebuild = false;
+        }
+        if (autoclose == null) {
+          autoclose = true;
+        }
+        if (callback == null) {
+          callback = null;
+        }
+        return ApplicationService.deployApplication(app, rebuild).success(function(data) {
+          var modalInstance;
+          modalInstance = $modal.open({
+            templateUrl: "taskRunnerModal.html",
+            controller: 'TaskRunnerModalCtrl',
+            resolve: {
+              description: function() {
+                if (rebuild) {
+                  return 'Rebuilding ' + app.name;
+                } else {
+                  return 'Restarting ' + app.name;
+                }
+              },
+              task: function() {
+                return data;
+              }
+            }
+          });
+          return modalInstance.opened.then(function() {
+            return modalInstance.finished.then(function(task) {
+              if (autoclose) {
+                modalInstance.close();
+              }
+              if (rebuild) {
+                $notify.log("Application " + app.name + " rebuilt");
+              } else {
+                $notify.log("Application " + app.name + " restarted");
+              }
+              if (callback != null) {
+                return callback();
+              }
+            });
+          });
+        }).error(function(data) {
+          if (rebuild) {
+            return $notify.logError(data.error ? data.error : "Error rebuilding application");
+          } else {
+            return $notify.logError(data.error ? data.error : "Error restarting application");
+          }
+        });
+      };
+    }
+  ]).controller('ApplicationTerminateCtrl', [
+    '$scope', '$modal', '$notify', 'ApplicationService', function($scope, $modal, $notify, ApplicationService) {
+      $scope.canTerminate = function(app) {
+        var _ref;
+        return (_ref = app.status) === 'running' || _ref === 'sleeping' || _ref === 'pending';
+      };
+      return $scope.terminateApp = function(app, autoclose, callback) {
+        if (autoclose == null) {
+          autoclose = true;
+        }
+        if (callback == null) {
+          callback = null;
+        }
+        return ApplicationService.terminateApplication(app).success(function(data) {
+          var modalInstance;
+          modalInstance = $modal.open({
+            templateUrl: "taskRunnerModal.html",
+            controller: 'TaskRunnerModalCtrl',
+            resolve: {
+              description: function() {
+                return 'Archiving ' + app.name;
+              },
+              task: function() {
+                return data;
+              }
+            }
+          });
+          return modalInstance.opened.then(function() {
+            return modalInstance.finished.then(function(task) {
+              if (autoclose) {
+                modalInstance.close();
+              }
+              $notify.log("Application " + app.name + " archived");
+              if (callback != null) {
+                return callback();
+              }
+            });
+          });
+        }).error(function(data) {
+          return $notify.logError(data.error ? data.error : "Error archiving application");
+        });
+      };
+    }
+  ]).controller('ApplicationPurgeCtrl', [
+    '$scope', '$modal', '$notify', 'ApplicationService', function($scope, $modal, $notify, ApplicationService) {
+      $scope.canPurge = function(app) {
+        var _ref;
+        return (_ref = app.status) === 'terminated';
+      };
+      return $scope.purgeApp = function(app, autoclose, callback) {
+        if (autoclose == null) {
+          autoclose = true;
+        }
+        if (callback == null) {
+          callback = null;
+        }
+        if (!$scope.canPurge(app)) {
+          $notify.logError("Application must be archived before it can be deleted.");
+          return;
+        }
+        return ApplicationService.purgeApplication(app).success(function(data) {
+          var modalInstance;
+          modalInstance = $modal.open({
+            templateUrl: "taskRunnerModal.html",
+            controller: 'TaskRunnerModalCtrl',
+            resolve: {
+              description: function() {
+                return 'Deleting ' + app.name;
+              },
+              task: function() {
+                return data;
+              }
+            }
+          });
+          return modalInstance.opened.then(function() {
+            return modalInstance.finished.then(function(task) {
+              if (autoclose) {
+                modalInstance.close();
+              }
+              $notify.log("Application " + app.name + " deleted");
+              if (callback != null) {
+                return callback();
+              }
+            });
+          });
+        }).error(function(data) {
+          return $notify.logError(data.error ? data.error : "Error deleting application");
+        });
+      };
+    }
+  ]).controller('ApplicationMetricsCtrl', [
+    '$scope', 'ApplicationService', 'ChartService', '$analytics', function($scope, ApplicationService, ChartService, $analytics) {
+      $analytics.pageTrack('/application/metrics');
+      $scope.metricsPeriod = '7d';
+      $scope.refreshGraphs = function() {
+        var interval;
+        $scope.memoryChart = null;
+        $scope.networkChart = null;
+        $scope.cpuChart = null;
+        $scope.connectionsChart = null;
+        interval = ChartService.calculateAppropriateInterval($scope.metricsPeriod);
+        ApplicationService.getMetrics($scope.application, 'container.shiny.connections', ['shiny.connections.active'], {
+          from: $scope.metricsPeriod,
+          interval: interval
+        }).success(function(data) {
+          var chartOptions, connections, point, _i, _len, _ref;
+          if (data.points.length > 0) {
+            connections = {
+              data: [],
+              label: "Connections"
+            };
+            _ref = data.points;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              point = _ref[_i];
+              connections.data.push([point.time, point['shiny.connections.active']]);
+            }
+            chartOptions = {
+              yaxis: {
+                min: 0,
+                tickDecimals: 1
+              }
+            };
+            return $scope.connectionsChart = ChartService.areaChart([connections], true, chartOptions);
+          } else {
+            return $scope.connectionsChart = ChartService.areaChart([], true);
+          }
+        })["catch"](function(res) {
+          return $scope.connectionsChart = ChartService.areaChart([], true);
+        });
+        ApplicationService.getMetrics($scope.application, 'container.shiny.status', ['shiny.rprocs.count'], {
+          from: $scope.metricsPeriod,
+          interval: interval
+        }).success(function(data) {
+          var chartOptions, point, r_processes, _i, _len, _ref;
+          if (data.points.length > 0) {
+            r_processes = {
+              data: [],
+              label: "R Processes"
+            };
+            _ref = data.points;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              point = _ref[_i];
+              r_processes.data.push([point.time, point['shiny.rprocs.count']]);
+            }
+            chartOptions = {
+              yaxis: {
+                min: 0,
+                tickDecimals: 1
+              }
+            };
+            return $scope.rprocChart = ChartService.areaChart([r_processes], true, chartOptions);
+          } else {
+            return $scope.rprocChart = ChartService.areaChart([], true);
+          }
+        })["catch"](function(res) {
+          return $scope.rprocChart = ChartService.areaChart([], true);
+        });
+        ApplicationService.getMetrics($scope.application, 'container.memory', ['memory.total_rss', 'memory.total_cache'], {
+          from: $scope.metricsPeriod,
+          interval: interval
+        }).success(function(data) {
+          var chartOptions, memory, point, _i, _len, _ref;
+          if (data.points.length > 0) {
+            memory = {
+              data: [],
+              label: "Memory"
+            };
+            _ref = data.points;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              point = _ref[_i];
+              memory.data.push([point.time, point['memory.total_rss']]);
+            }
+            chartOptions = {
+              yaxis: {
+                min: 0,
+                tickDecimals: 1,
+                tickFormatter: function(val, axis) {
+                  if (val > 1000000) {
+                    return (val / 1000000).toFixed(axis.tickDecimals) + " MB";
+                  }
+                  if (val > 1000) {
+                    return (val / 1000).toFixed(axis.tickDecimals) + " KB";
+                  } else {
+                    return val.toFixed(axis.tickDecimals) + " B";
+                  }
+                }
+              }
+            };
+            return $scope.memoryChart = ChartService.areaChart([memory], true, chartOptions);
+          } else {
+            return $scope.memoryChart = ChartService.areaChart([], true);
+          }
+        })["catch"](function(res) {
+          return $scope.memoryChart = ChartService.areaChart([], true);
+        });
+        ApplicationService.getMetrics($scope.application, 'container.cpu', ['cpu.user', 'cpu.system'], {
+          from: $scope.metricsPeriod,
+          interval: interval
+        }).success(function(data) {
+          var chartOptions, cpu_system, cpu_user, point, _i, _len, _ref;
+          if (data.points.length > 0) {
+            cpu_user = {
+              data: [],
+              label: "User"
+            };
+            cpu_system = {
+              data: [],
+              label: "System"
+            };
+            _ref = data.points;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              point = _ref[_i];
+              cpu_user.data.push([point.time, point['cpu.user']]);
+              cpu_system.data.push([point.time, point['cpu.system']]);
+            }
+            chartOptions = {
+              yaxis: {
+                min: 0,
+                tickDecimals: 1
+              }
+            };
+            return $scope.cpuChart = ChartService.areaChart([cpu_user, cpu_system], true, chartOptions);
+          } else {
+            return $scope.cpuChart = ChartService.areaChart([], true);
+          }
+        })["catch"](function(res) {
+          return $scope.cpuChart = ChartService.areaChart([], true);
+        });
+        return ApplicationService.getMetrics($scope.application, 'container.network', ['network.rx', 'network.tx'], {
+          from: $scope.metricsPeriod,
+          interval: interval
+        }).success(function(data) {
+          var chartOptions, point, rx, tx, _i, _len, _ref;
+          if (data.points.length > 0) {
+            tx = {
+              data: [],
+              label: "TX"
+            };
+            rx = {
+              data: [],
+              label: "RX"
+            };
+            _ref = data.points;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              point = _ref[_i];
+              tx.data.push([point.time, point['network.tx']]);
+              rx.data.push([point.time, point['network.rx']]);
+            }
+            chartOptions = {
+              yaxis: {
+                min: 0,
+                tickDecimals: 1,
+                tickFormatter: function(val, axis) {
+                  if (val > 1000000) {
+                    return (val / 1000000).toFixed(axis.tickDecimals) + " MB";
+                  }
+                  if (val > 1000) {
+                    return (val / 1000).toFixed(axis.tickDecimals) + " KB";
+                  } else {
+                    return val.toFixed(axis.tickDecimals) + " B";
+                  }
+                }
+              }
+            };
+            return $scope.networkChart = ChartService.areaChart([tx, rx], true, chartOptions);
+          } else {
+            return $scope.networkChart = ChartService.areaChart([], true);
+          }
+        })["catch"](function(res) {
+          return $scope.networkChart = ChartService.areaChart([], true);
+        });
+      };
+      return $scope.refreshGraphs();
+    }
+  ]).controller('ApplicationLogsCtrl', [
+    '$scope', 'ApplicationService', '$analytics', function($scope, ApplicationService, $analytics) {
+      $analytics.pageTrack('/application/logs');
+      $scope.loading = true;
+      $scope.logs = null;
+      $scope.logs_download_url = ApplicationService.getLogsUrl($scope.application);
+      return ApplicationService.getLogs($scope.application).success(function(data) {
+        return $scope.logs = data;
+      }).error(function(data) {
+        if (data.error) {
+          return $scope.logs = "Error getting logs: " + data.error;
+        } else {
+          return $scope.logs = "Error getting logs. Please try again.";
+        }
+      })["finally"](function(data) {
+        return $scope.loading = false;
+      });
+    }
+  ]).controller('ApplicationSecurityCtrl', [
+    '$scope', 'ApplicationService', '$notify', '$modal', function($scope, ApplicationService, $notify, $modal) {
+      $scope.properties = {};
+      $scope.properties['application.visibility'] = $scope.application.deployment.properties['application.visibility'];
+      $scope.refreshSettings = function() {
+        return $scope.refresh().then(function() {
+          return $scope.properties['application.visibility'] = $scope.application.deployment.properties['application.visibility'];
+        });
+      };
+      $scope.canSave = function() {
+        return $scope.settingsForm.$valid && $scope.settingsForm.$dirty;
+      };
+      return $scope.save = function() {
+        var changed, k, v, _ref;
+        changed = {};
+        _ref = $scope.application.deployment.properties;
+        for (k in _ref) {
+          v = _ref[k];
+          if (($scope.properties[k] != null) && $scope.properties[k] !== $scope.application.deployment.properties[k]) {
+            changed[k] = $scope.properties[k];
+          }
+        }
+        if (Object.keys(changed).length > 0) {
+          return ApplicationService.setProperties($scope.application, changed).success(function() {
+            return ApplicationService.deployApplication($scope.application).success(function(data) {
+              var modalInstance;
+              modalInstance = $modal.open({
+                templateUrl: "taskRunnerModal.html",
+                controller: 'TaskRunnerModalCtrl',
+                resolve: {
+                  description: function() {
+                    return 'Restarting ' + $scope.application.name;
+                  },
+                  task: function() {
+                    return data;
+                  }
+                }
+              });
+              return modalInstance.result.then(function(result) {
+                $scope.refreshSettings();
+                return modalInstance.closed = true;
+              }, function(result) {
+                $scope.refreshSettings();
+                return modalInstance.closed = true;
+              });
+            }).error(function(data) {
+              if (data.error) {
+                return $notify.logError(data.error);
+              } else {
+                return $notify.logError("Error deploying application.");
+              }
+            })["finally"](function() {
+              return $scope.settingsForm.$setPristine();
+            });
+          }).error(function(data) {
+            if (data.error) {
+              return $notify.logError(data.error);
+            } else {
+              return $notify.logError("Error updating settings.");
+            }
+          });
+        }
+      };
+    }
+  ]).controller('ApplicationUsersCtrl', [
+    '$scope', 'ApplicationService', '$modal', '$notify', function($scope, ApplicationService, $modal, $notify) {
+      $scope.loading = true;
+      $scope.users = null;
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.showUsers = function() {
+        return $scope.application.deployment.properties['application.visibility'] === 'private';
+      };
+      $scope.removeUser = function(i) {
+        var user;
+        user = $scope.authorized[i].user;
+        return ApplicationService.removeUser($scope.application, user).success(function() {
+          return $scope.authorized.splice(i, 1);
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error);
+        });
+      };
+      $scope.removeInvite = function(i) {
+        var invite;
+        invite = $scope.invited[i];
+        return ApplicationService.cancelInvite(invite).success(function() {
+          return $scope.invited.splice(i, 1);
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error);
+        });
+      };
+      $scope.copyInviteLink = function(i) {
+        var invite;
+        return invite = $scope.invited[i].link;
+      };
+      $scope.resendInvite = function(i) {
+        var invite;
+        invite = $scope.invited[i];
+        return ApplicationService.resendInvite(invite).success(function(data) {
+          $scope.invited[i] = data;
+          return $notify.log("Resent invite to " + invite.email);
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error);
+        });
+      };
+      $scope.showInviteUserModal = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "inviteUserModal.html",
+          controller: 'InviteUserModalCtrl',
+          size: 'lg'
+        });
+        return modalInstance.result.then(function(result) {
+          var email, _i, _len, _ref, _results;
+          _ref = result.emails;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            email = _ref[_i];
+            ApplicationService.inviteUser($scope.application, email, result.invite_email, result.invite_email_message)["catch"](function(res) {
+              return $notify.logError(res.data.error);
+            });
+            _results.push($scope.refreshUsers());
+          }
+          return _results;
+        }, function() {
+          return $scope.refresh();
+        });
+      };
+      $scope.refreshUsers = function() {
+        $scope.loading = true;
+        return $scope.refresh().then(function() {
+          return ApplicationService.getAuthorized($scope.application).then(function(data) {
+            $scope.authorized = data;
+            return ApplicationService.getInvited($scope.application).then(function(data) {
+              $scope.invited = data;
+              return $scope.loading = false;
+            });
+          });
+        });
+      };
+      return $scope.refreshUsers();
+    }
+  ]).controller('InviteUserModalCtrl', [
+    '$scope', '$modalInstance', 'ApplicationService', '$notify', function($scope, $modalInstance, ApplicationService, $notify) {
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.emails = null;
+      $scope.invite_email = true;
+      $scope.invite_email_message = null;
+      $scope.show_message = false;
+      $scope.canSubmit = function() {
+        return $scope.inviteUserForm.$valid && !$scope.submitting;
+      };
+      $scope.toggleEmail = function() {
+        $scope.invite_email = !$scope.invite_email;
+        if (!$scope.invite_email) {
+          return $scope.show_message = false;
+        }
+      };
+      $scope.toggleMessage = function() {
+        $scope.show_message = !$scope.show_message;
+        if ($scope.show_message) {
+          return $scope.invite_email = true;
+        }
+      };
+      $scope.doSubmit = function() {
+        var result;
+        $scope.submitting = true;
+        result = {
+          emails: $scope.emails != null ? $scope.emails.split('\n') : [],
+          invite_email: $scope.invite_email,
+          invite_email_message: $scope.invite_email_message
+        };
+        return $modalInstance.close(result);
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('ApplicationSettingsCtrl', [
+    '$scope', 'ApplicationService', '$notify', '$modal', function($scope, ApplicationService, $notify, $modal) {
+      $scope.hasOptOutBrandingEntitlement = function() {
+        return $scope.currentAccount.subscription.entitlements.BrandingFeature['enabled'];
+      };
+      $scope.properties = angular.copy($scope.application.deployment.properties);
+      $scope.properties['application.instances.load.factor'] = $scope.properties['application.instances.load.factor'] * 100;
+      $scope.properties['application.shiny.scheduler.load.factor'] = $scope.properties['application.shiny.scheduler.load.factor'] * 100;
+      $scope.refreshSettings = function() {
+        return $scope.refresh().then(function() {
+          $scope.properties = angular.copy($scope.application.deployment.properties);
+          $scope.properties['application.instances.load.factor'] = $scope.properties['application.instances.load.factor'] * 100;
+          return $scope.properties['application.shiny.scheduler.load.factor'] = $scope.properties['application.shiny.scheduler.load.factor'] * 100;
+        });
+      };
+      $scope.canSave = function() {
+        return $scope.settingsForm.$valid && $scope.settingsForm.$dirty;
+      };
+      return $scope.save = function() {
+        var changed, k, v, _ref;
+        changed = {};
+        _ref = $scope.application.deployment.properties;
+        for (k in _ref) {
+          v = _ref[k];
+          if ($scope.properties[k] !== $scope.application.deployment.properties[k]) {
+            if (k === 'application.instances.load.factor' || k === 'application.shiny.scheduler.load.factor') {
+              v = $scope.properties[k] / 100;
+            } else {
+              v = $scope.properties[k];
+            }
+            changed[k] = v;
+          }
+        }
+        return ApplicationService.setProperties($scope.application, changed).success(function() {
+          return ApplicationService.deployApplication($scope.application, false).success(function(data) {
+            var modalInstance;
+            modalInstance = $modal.open({
+              templateUrl: "taskRunnerModal.html",
+              controller: 'TaskRunnerModalCtrl',
+              resolve: {
+                description: function() {
+                  return 'Restarting ' + $scope.application.name;
+                },
+                task: function() {
+                  return data;
+                }
+              }
+            });
+            return modalInstance.result.then(function(result) {
+              $scope.refreshSettings();
+              return modalInstance.closed = true;
+            }, function(result) {
+              $scope.refreshSettings();
+              return modalInstance.closed = true;
+            });
+          }).error(function(data) {
+            if (data.error) {
+              return $notify.logError(data.error);
+            } else {
+              return $notify.logError("Error restarting application");
+            }
+          });
+        })["catch"](function(data) {
+          return $notify.logError("Error updating settings");
+        });
+      };
+    }
+  ]).controller('ApplicationUsageCtrl', [
+    '$scope', 'AccountService', 'ChartService', function($scope, AccountService, ChartService) {
+      $scope.usageType = 'hours';
+      $scope.usagePeriod = '7d';
+      $scope.refresh = function() {
+        var interval;
+        $scope.usageChart = null;
+        $scope.totalHours = null;
+        interval = ChartService.calculateAppropriateInterval($scope.usagePeriod);
+        return AccountService.getUsage({
+          id: $scope.application.account_id
+        }, $scope.usageType, {
+          from: $scope.usagePeriod,
+          interval: interval,
+          application: $scope.application.id
+        }).success(function(data) {
+          var p, point_name, series;
+          point_name = "application-" + $scope.application.id;
+          if ((data.points[point_name] != null) && data.points[point_name].length > 0) {
+            series = {
+              data: data.points[point_name],
+              label: $scope.usageType
+            };
+            $scope.usageChart = ChartService.barChart([series], interval);
+            return $scope.totalHours = ((function() {
+              var _i, _len, _ref, _results;
+              _ref = data.points[point_name];
+              _results = [];
+              for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                p = _ref[_i];
+                _results.push(p[1]);
+              }
+              return _results;
+            })()).reduce(function(t, s) {
+              return t + s;
+            });
+          } else {
+            return $scope.usageChart = ChartService.barChart([], interval);
+          }
+        })["catch"](function(res) {
+          return $scope.usageChart = ChartService.barChart([], interval);
+        });
+      };
+      return $scope.refresh();
+    }
+  ]).controller('ApplicationURLCtrl', [
+    '$scope', 'ApplicationService', 'DomainService', 'ProxyService', '$notify', '$modal', function($scope, ApplicationService, DomainService, ProxyService, $notify, $modal) {
+      $scope.loading = true;
+      $scope.submitting = false;
+      $scope.hasCustomDomainsEntitlement = function() {
+        var limit;
+        limit = $scope.currentAccount.subscription.entitlements.MaxCustomDomainsLimit.limit;
+        return (limit != null) && limit > 0;
+      };
+      $scope.showApplicationURLModal = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "addApplicationURL.html",
+          controller: 'AddApplicationURLModalCtrl',
+          size: 'lg',
+          resolve: {
+            pools: function() {
+              return angular.copy($scope.pools);
+            },
+            domains: function() {
+              var d;
+              return angular.copy((function() {
+                var _i, _len, _ref, _results;
+                _ref = $scope.domains;
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  d = _ref[_i];
+                  if (d.reserved === false) {
+                    _results.push(d);
+                  }
+                }
+                return _results;
+              })());
+            }
+          }
+        });
+        return modalInstance.result["finally"](function() {
+          return $scope.refresh();
+        });
+      };
+      $scope.deleteFrontend = function(i) {
+        return ProxyService.deleteProxyFrontend($scope.frontends[i].pool_id, $scope.frontends[i].id).success(function() {
+          $scope.frontends.splice(i, 1);
+          return $notify.log("Application URL deleted.");
+        }).error(function(data) {
+          return $notify.logError(data.error);
+        });
+      };
+      $scope.refresh = function() {
+        $scope.loading = true;
+        return DomainService.listDomains(100, 0, {
+          account_id: $scope.currentAccount.id
+        }).success(function(data) {
+          $scope.domains = angular.copy(data.domains);
+          return ProxyService.listProxies(100, 0, {
+            app_id: $scope.application.id
+          }).success(function(data) {
+            var pool, _i, _len, _ref;
+            $scope.pools = data.pools;
+            $scope.frontends = [];
+            _ref = data.pools;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              pool = _ref[_i];
+              ProxyService.listProxyFrontends(pool.id).success(function(data) {
+                var frontend, _j, _len1, _ref1, _results;
+                _ref1 = data.frontends;
+                _results = [];
+                for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+                  frontend = _ref1[_j];
+                  _results.push($scope.frontends.push(frontend));
+                }
+                return _results;
+              });
+            }
+            return $scope.loading = false;
+          })["catch"](function() {
+            return $scope.loading = false;
+          });
+        })["catch"](function() {
+          return $scope.loading = false;
+        });
+      };
+      return $scope.refresh();
+    }
+  ]).controller('AddApplicationURLModalCtrl', [
+    '$scope', '$modalInstance', 'ProxyService', '$notify', 'pools', 'domains', function($scope, $modalInstance, ProxyService, $notify, pools, domains) {
+      $scope.submitting = false;
+      $scope.application_url = '';
+      $scope.domains = domains;
+      if (domains.length) {
+        $scope.domain = domains[0].domain;
+      }
+      $scope.canSubmit = function() {
+        return $scope.addApplicationURLForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        return ProxyService.createProxyFrontend(pools[0].id, $scope.domain, $scope.application_url).success(function(data) {
+          $notify.log("Application URL created.");
+          $scope.submitting = false;
+          return $modalInstance.dismiss('cancel');
+        })["catch"](function(data) {
+          $scope.submitting = false;
+          return $notify.logError(data.data.error);
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]);
+
+}).call(this);
+-£°sÈ      Xø¢êXø¢ê=«’Xøá„   B    :https://www.shinyapps.io/admin/scripts/controllers/application.js necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAQAAgAAAAAAAAAAAAAAAAAAAAAB4vFIJp5wRkeyPxAQ9RJGKPqbqVvKO0mKuIl8ec8o/uhmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAUIMIIFBDCCA+ygAwIBAgISA0Ts33LowAg+Zs9m9tEz8o6AMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQDExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzAzMjcxNzE3MDBaFw0xNzA2MjUxNzE3MDBaMBsxGTAXBgNVBAMTEHd3dy5zaGlueWFwcHMuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCtYbnYnZ/rN6p/1Fqp8gX3qB6k1uy6TwOLZPF+lZxfQ4uonOowQ7UrFwapU+mITi/l5Rw77Pdal5jVGipicvvZbgZkMkc+HqUBDLGbMdqZct3QvqVQFVSKYkwQMWqIJkljmr2WSpbPtxeD9c6AJ8uU/orqZPZlOnRnI3/+8OlnTvogssGaAEWkijBF9NuDm42yDiLtv5qWhhKjzppgjDTYVA109kg/+DvMQFpvfWVG6Vy/Ic8fnJKrMpQOFyYuSOs1nkqw0xwirqbO6CHUMjWOr5gEekDRx+12SxpwR0FAdpBVb8WQWGvkAdkEJk+MyzBv1D2iKJ1QkkKQYYhdHGf/AgMBAAGjggIRMIICDTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFAitCoNqQC56a3oTa2Zjkc/MXX8oMB8GA1UdIwQYMBaAFKhKamMEfd265tE5t6ZFZe/zqOyhMHAGCCsGAQUFBwEBBGQwYjAvBggrBgEFBQcwAYYjaHR0cDovL29jc3AuaW50LXgzLmxldHNlbmNyeXB0Lm9yZy8wLwYIKwYBBQUHMAKGI2h0dHA6Ly9jZXJ0LmludC14My5sZXRzZW5jcnlwdC5vcmcvMBsGA1UdEQQUMBKCEHd3dy5zaGlueWFwcHMuaW8wgf4GA1UdIASB9jCB8zAIBgZngQwBAgEwgeYGCysGAQQBgt8TAQEBMIHWMCYGCCsGAQUFBwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCBqwYIKwYBBQUHAgIwgZ4MgZtUaGlzIENlcnRpZmljYXRlIG1heSBvbmx5IGJlIHJlbGllZCB1cG9uIGJ5IFJlbHlpbmcgUGFydGllcyBhbmQgb25seSBpbiBhY2NvcmRhbmNlIHdpdGggdGhlIENlcnRpZmljYXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL2xldHNlbmNyeXB0Lm9yZy9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAW666JtafvOyKokL4jdvNvNdNENb5+jsy11DteHT+Src08XKErD37JHNGB9eiP96ifoltDPCoY0khBXoUWgf/sqLCyGaN9ZKqzcsQVRi7zP96a+tCoTpA0+FUnGuh7V1Fnruzhr4S/P8aqi1RKcsJsaX2hd7VaDUeBcHoXD8VFnTWP12XXzRr/07MulIlpB5HFVqOWcgQ+u5HSBLpm5ypWzQdEwfZEn/JbVnbN7kiM1x823MwO2aflw8a6E9fjGjDcibUrSv2H5qy+no92APoZcf/P5iYRdS7pNcB+fRpQSaa53a8QWCq4SV3Q8N/bDfuwAkdQeBJfHy9TRgMkpstV8AvAQMAAAAAAQEAAAEA request-method GET response-head HTTP/1.1 200 OK
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Etag: "72b44f06f59dfbeb3b264f209f3cda18"
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Content-Type: application/javascript
+Accept-Ranges: bytes
+Server: TornadoServer/4.0.2
+Content-Length: 38490
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Etag: "72b44f06f59dfbeb3b264f209f3cda18"
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Content-Type: application/javascript
+Accept-Ranges: bytes
+Server: TornadoServer/4.0.2
+Content-Length: 38490
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 27088 net-response-time-onstop 27138   –Z

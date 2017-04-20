@@ -1,0 +1,222 @@
+<div class="page page-dashboard">
+
+    <!-- getting started !-->
+    <section class="panel panel-default"
+             data-ng-show="showGettingStarted"
+             data-ng-controller="GettingStartedCtrl">
+        <div class="panel-heading">
+            <strong><i class="ti-flag-alt"></i>&nbsp;&nbsp;Getting Started</strong>
+            <button type="button" class="close" data-ng-click="close()">
+               <span aria-hidden="true">√ó</span>
+            </button>
+        </div>
+        <div class="panel-body">
+            <div class="callout callout-info">
+                <h4>Hi! You must be new here...</h4>
+                <p>
+                    Thanks for trying out shinyapps.io! You'll need to install the <code>rsconnect</code> R package to get
+                    started.
+                    The <code>rsconnect</code> package
+                    enables you to deploy and manage your Shiny applications directly from your R console. To get
+                    started, fire up your <a href="http://www.rstudio.com/products/rstudio/">favorite</a> IDE,
+                    and follow the directions below.
+                </p>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Step 1 &ndash;</strong> Install rsconnect
+                </div>
+                <div class="panel-body">
+                    <p>
+                        The <code>rsconnect</code> package can be installed directly from CRAN.
+                        To make sure you have the latest version run following code in your R console:
+                    </p>
+                    <pre>install.packages('rsconnect')</pre>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Step 2 &ndash;</strong> Authorize Account
+                </div>
+                <div class="panel-body">
+                    <div class="row col-md-12">
+                        <p>
+                            The <code>rsconnect</code> package must be authorized to your account using a token and
+                            secret.
+                            To do this, click the copy button below and we'll copy the whole command you need to
+                            your clipboard. Just paste it into your console to authorize your account. Once
+                            you've
+                            entered the command successfully in R, that computer is now authorized to deploy
+                            applications to your shinyapps.io account.
+                        </p>
+                    </div>
+                    <div class="row" data-ng-controller="TokenCopyCtrl" data-ng-init="init()">
+                        <div class="col-sm-8">
+                            <pre>{{ text }}</pre>
+                        </div>
+                        <div class="col-sm-4">
+                            <button id="show-secret-btn" class="btn btn-labeled btn-success"
+                                    data-ng-click="toggleSecret()"
+                                    title="Click to show your secret." style="width: 100%">
+                                <span class="btn-label icon fa fa-key"></span>{{ secretButtonText }}
+                            </button>
+
+                            <button class="btn btn-labeled btn-success"
+                                    data-clip-copy="copyText"
+                                    data-clip-click="onCopy()"
+                                    title="Click to copy command."
+                                    style="display: block; width: 100%; margin-top: 10px;">
+                                <span class="btn-label icon glyphicon glyphicon-paperclip"></span>
+                                &nbsp;{{copyButtonText }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p>
+                                In the future, you can manage your tokens from the <a href="#/tokens">Tokens</a>
+                                page the settings menu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Step 3 &ndash;</strong> Deploy
+                </div>
+                <div class="panel-body">
+                    <p>
+                        Once the <code>rsconnect</code> package has been configured, you're ready to deploy your
+                        first
+                        application. If you haven't written any applications yet, you can also checkout the
+                        <a href="http://shiny.rstudio.com/articles/shinyapps.html" target="_blank">Getting Started
+                            Guide</a> for instructions on how to deploy our demo application. Run the following code
+                        in your R console.
+                    </p>
+                        <pre>library(rsconnect)
+rsconnect::deployApp('path/to/your/app')</pre>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="col-md-12" data-ng-show="is_suspended()">
+            <div class="text-center alert alert-danger">
+                <span>Account is suspended until {{ suspended_until | date:'medium' }}<span data-ng-show="has_reason()"> due to "{{ currentAccount['suspended_reason'] | lowercase }}"</span>.<br>
+                    All of your applications will be unavailable until then, or you can <a href="#/account/billing">upgrade</a> your account.</span>
+
+            </div>
+        </div>
+        <div class="col-md-12">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    <strong><span class="ti-layout-grid3"></span>&nbsp;&nbsp;What's new?</strong>
+                </div>
+                <div class="panel-body">
+                    <!--<feed summary="true" url="http://blog.rstudio.org/category/shinyapps-io/feed/atom/" count="3"/>-->
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel" data-ng-controller="ApplicationStatusWidgetCtrl">
+                <div class="panel-heading bg-info clearfix">
+                    <i class="glyphicon glyphicon-cloud text-huge pull-left"
+                       style="display:block; margin-right: 20px"></i>
+                    <h3>{{ numAppsRunning + numAppsSleeping + numAppsPending }}</h3>
+                    <p>Applications Online</p>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge badge-success">{{ numAppsRunning }}</span>
+                        <a href="#/applications/running">
+                            Running
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge badge-info">{{ numAppsSleeping }}</span>
+                        <a href="#/applications/sleeping">
+                            Sleeping
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge badge-danger">{{ numAppsTerminated }}</span>
+                        <a href="#/applications/terminated">
+                            Archived
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <div class="col-md-8">
+            <section class="panel panel-default" data-ng-controller="RecentApplicationsWidgetCtrl">
+                <div class="panel-heading">
+                    <strong><span class="ti-layout-grid3"></span>&nbsp;&nbsp;Recent Applications</strong>
+                </div>
+                <div class="panel-body">
+                    <div data-ng-class="loading ? 'loading' : ''">
+                        <table class="table table-dynamic" data-ng-hide="loading">
+                            <thead>
+                                <th>
+                                    Id
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                </thead>
+                            <tbody>
+                                <tr data-ng-repeat="application in applications">
+                                    <td>
+                                        {{ application.id }}
+                                    </td>
+                                    <td>
+                                        <a href="#/application/{{application.id}}">
+                                            {{application.name}}
+                                        </a>
+                                        <a href="{{application.url}}" target="_blank"><i class="ti ti-new-window"></i></a>
+                                    </td>
+                                    <td>
+                                        <span data-application-status="{{application.status}}"></span>
+                                    </td>
+                                </tr>
+                                <tr data-ng-show="!applications.length">
+                                    <td colspan="3">
+                                        No Recent Applications
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+r…ìWW£      X¯¢ÌX¯¢Ó=´è≥X¯·ø   4    :https://www.shinyapps.io/admin/views/dashboard.html necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAQAAgAAAAAAAAAAAAAAAAAAAAAB4vFIJp5wRkeyPxAQ9RJGKPqbqVvKO0mKuIl8ec8o/uhmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAUIMIIFBDCCA+ygAwIBAgISA0Ts33LowAg+Zs9m9tEz8o6AMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQDExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzAzMjcxNzE3MDBaFw0xNzA2MjUxNzE3MDBaMBsxGTAXBgNVBAMTEHd3dy5zaGlueWFwcHMuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCtYbnYnZ/rN6p/1Fqp8gX3qB6k1uy6TwOLZPF+lZxfQ4uonOowQ7UrFwapU+mITi/l5Rw77Pdal5jVGipicvvZbgZkMkc+HqUBDLGbMdqZct3QvqVQFVSKYkwQMWqIJkljmr2WSpbPtxeD9c6AJ8uU/orqZPZlOnRnI3/+8OlnTvogssGaAEWkijBF9NuDm42yDiLtv5qWhhKjzppgjDTYVA109kg/+DvMQFpvfWVG6Vy/Ic8fnJKrMpQOFyYuSOs1nkqw0xwirqbO6CHUMjWOr5gEekDRx+12SxpwR0FAdpBVb8WQWGvkAdkEJk+MyzBv1D2iKJ1QkkKQYYhdHGf/AgMBAAGjggIRMIICDTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFAitCoNqQC56a3oTa2Zjkc/MXX8oMB8GA1UdIwQYMBaAFKhKamMEfd265tE5t6ZFZe/zqOyhMHAGCCsGAQUFBwEBBGQwYjAvBggrBgEFBQcwAYYjaHR0cDovL29jc3AuaW50LXgzLmxldHNlbmNyeXB0Lm9yZy8wLwYIKwYBBQUHMAKGI2h0dHA6Ly9jZXJ0LmludC14My5sZXRzZW5jcnlwdC5vcmcvMBsGA1UdEQQUMBKCEHd3dy5zaGlueWFwcHMuaW8wgf4GA1UdIASB9jCB8zAIBgZngQwBAgEwgeYGCysGAQQBgt8TAQEBMIHWMCYGCCsGAQUFBwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCBqwYIKwYBBQUHAgIwgZ4MgZtUaGlzIENlcnRpZmljYXRlIG1heSBvbmx5IGJlIHJlbGllZCB1cG9uIGJ5IFJlbHlpbmcgUGFydGllcyBhbmQgb25seSBpbiBhY2NvcmRhbmNlIHdpdGggdGhlIENlcnRpZmljYXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL2xldHNlbmNyeXB0Lm9yZy9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAW666JtafvOyKokL4jdvNvNdNENb5+jsy11DteHT+Src08XKErD37JHNGB9eiP96ifoltDPCoY0khBXoUWgf/sqLCyGaN9ZKqzcsQVRi7zP96a+tCoTpA0+FUnGuh7V1Fnruzhr4S/P8aqi1RKcsJsaX2hd7VaDUeBcHoXD8VFnTWP12XXzRr/07MulIlpB5HFVqOWcgQ+u5HSBLpm5ypWzQdEwfZEn/JbVnbN7kiM1x823MwO2aflw8a6E9fjGjDcibUrSv2H5qy+no92APoZcf/P5iYRdS7pNcB+fRpQSaa53a8QWCq4SV3Q8N/bDfuwAkdQeBJfHy9TRgMkpstV8AvAQMAAAAAAQEAAAAA request-method GET auth Bearer response-head HTTP/1.1 200 OK
+Date: Thu, 20 Apr 2017 12:00:46 GMT
+Etag: "af884f0d5a1e52579dce6a332beafc0a"
+Content-Length: 10016
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:19 GMT
+Content-Type: text/html
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Date: Thu, 20 Apr 2017 12:00:46 GMT
+Etag: "af884f0d5a1e52579dce6a332beafc0a"
+Content-Length: 10016
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:19 GMT
+Content-Type: text/html
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 975 net-response-time-onstop 975   ' 

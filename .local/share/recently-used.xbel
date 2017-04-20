@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///media/peopleanalytics/d87473c7-375e-4b3a-92b0-6aa401d20f4f/Data%20Dell/Document/R%20Data/CTT.R" added="2017-04-20T07:07:23Z" modified="2017-04-20T07:07:31Z" visited="2017-04-20T07:07:23Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T07:07:31Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/d87473c7-375e-4b3a-92b0-6aa401d20f4f/Data%20Dell/Document/R%20Data/CTT-copy.R" added="2017-04-20T07:07:35Z" modified="2017-04-20T07:07:35Z" visited="2017-04-20T07:07:35Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T07:07:35Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637" added="2017-04-20T07:36:18Z" modified="2017-04-20T07:36:18Z" visited="2017-04-20T07:36:18Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T07:36:18Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/20%20ML-Talent.R" added="2017-04-20T08:44:21Z" modified="2017-04-20T08:44:21Z" visited="2017-04-20T08:44:21Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T08:44:21Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/20%20ML-Talent.R" added="2017-04-20T08:44:34Z" modified="2017-04-20T08:44:34Z" visited="2017-04-20T08:44:35Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T08:44:34Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop" added="2017-04-20T08:44:47Z" modified="2017-04-20T08:44:47Z" visited="2017-04-20T08:44:47Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T08:44:47Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/tal_eval1.csv" added="2017-04-20T09:50:26Z" modified="2017-04-20T09:50:42Z" visited="2017-04-20T09:50:26Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/csv"/>
+        <bookmark:applications>
+          <bookmark:application name="nemo" exec="&apos;libreoffice --calc %U&apos;" modified="2017-04-20T09:50:26Z" count="1"/>
+          <bookmark:application name="LibreOffice 5.1" exec="&apos;soffice %u&apos;" modified="2017-04-20T09:50:42Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/Tree%20Shiny2/server.R" added="2017-04-20T11:29:49Z" modified="2017-04-20T11:29:49Z" visited="2017-04-20T11:29:49Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T11:29:49Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/Tree%20Shiny2/ui.R" added="2017-04-20T11:30:27Z" modified="2017-04-20T11:30:27Z" visited="2017-04-20T11:30:27Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T11:30:27Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/Tree%20Shiny2" added="2017-04-20T11:31:24Z" modified="2017-04-20T11:31:24Z" visited="2017-04-20T11:31:24Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T11:31:24Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/Dell%20April/Shiny%20Exp/Tree%20Shiny2/server.R" added="2017-04-20T11:34:07Z" modified="2017-04-20T11:34:07Z" visited="2017-04-20T11:34:07Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="nemo" exec="&apos;/usr/lib/rstudio/bin/rstudio %F&apos;" modified="2017-04-20T11:34:07Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/rek-xyz.csv" added="2017-04-20T11:36:42Z" modified="2017-04-20T12:13:18Z" visited="2017-04-20T11:36:42Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/csv"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2017-04-20T11:36:42Z" count="1"/>
+          <bookmark:application name="opera" exec="&apos;opera %u&apos;" modified="2017-04-20T12:13:18Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/rek-xyz-test.csv" added="2017-04-20T11:36:58Z" modified="2017-04-20T12:13:18Z" visited="2017-04-20T11:36:58Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/csv"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2017-04-20T11:36:58Z" count="1"/>
+          <bookmark:application name="opera" exec="&apos;opera %u&apos;" modified="2017-04-20T12:13:18Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/Dell%20Lama/Desktop%20back%20up/Documents/1%20unair%20Image%20of%20Organization.pptx" added="2017-04-20T11:54:49Z" modified="2017-04-20T11:54:51Z" visited="2017-04-20T11:54:49Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
+        <bookmark:applications>
+          <bookmark:application name="nemo" exec="&apos;libreoffice --impress %U&apos;" modified="2017-04-20T11:54:49Z" count="1"/>
+          <bookmark:application name="LibreOffice 5.1" exec="&apos;soffice %u&apos;" modified="2017-04-20T11:54:51Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///media/peopleanalytics/c26805bf-903a-4d99-a438-535200437637/Dell%20Lama/Desktop%20back%20up/Downloads/1%20Unair%20Why%20People%20Hate%20HR%20.pptx" added="2017-04-20T11:54:56Z" modified="2017-04-20T11:54:58Z" visited="2017-04-20T11:54:57Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
+        <bookmark:applications>
+          <bookmark:application name="nemo" exec="&apos;libreoffice --impress %U&apos;" modified="2017-04-20T11:54:56Z" count="1"/>
+          <bookmark:application name="LibreOffice 5.1" exec="&apos;soffice %u&apos;" modified="2017-04-20T11:54:58Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/ML%20AR%20INA.R" added="2017-04-20T12:04:24Z" modified="2017-04-20T12:04:24Z" visited="2017-04-20T12:04:24Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-r-source"/>
+        <bookmark:applications>
+          <bookmark:application name="nemo" exec="&apos;/usr/lib/rstudio/bin/rstudio %F&apos;" modified="2017-04-20T12:04:24Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/peopleanalytics/Desktop/Tree%20Shiny2/XGB%20talent" added="2017-04-20T12:32:47Z" modified="2017-04-20T12:32:47Z" visited="2017-04-20T12:32:48.110490Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="rstudio" exec="&apos;rstudio %u&apos;" modified="2017-04-20T12:32:47Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>

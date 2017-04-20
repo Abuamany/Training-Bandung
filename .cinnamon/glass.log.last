@@ -1,0 +1,32 @@
+info t=2017-04-20T07:45:34.054Z Cinnamon.AppSystem.get_default() started in 162 ms
+info t=2017-04-20T07:45:34.059Z loading user theme: /usr/share/themes/Linux Mint/cinnamon/cinnamon.css
+info t=2017-04-20T07:45:34.077Z added icon directory: /usr/share/themes/Linux Mint/cinnamon
+info t=2017-04-20T07:45:34.151Z PlacesManager: Updating devices
+info t=2017-04-20T07:45:34.170Z loaded at Thu Apr 20 2017 14:45:34 GMT+0700 (WIB)
+info t=2017-04-20T07:45:34.622Z Loaded applet menu@cinnamon.org in 449 ms
+info t=2017-04-20T07:45:34.628Z Loaded applet show-desktop@cinnamon.org in 5 ms
+info t=2017-04-20T07:45:34.653Z Role locked: panellauncher
+info t=2017-04-20T07:45:34.654Z Loaded applet panel-launchers@cinnamon.org in 25 ms
+info t=2017-04-20T07:45:34.664Z Loaded applet window-list@cinnamon.org in 10 ms
+info t=2017-04-20T07:45:34.672Z Role locked: notifications
+info t=2017-04-20T07:45:34.675Z Loaded applet notifications@cinnamon.org in 10 ms
+info t=2017-04-20T07:45:34.694Z Loaded applet user@cinnamon.org in 18 ms
+info t=2017-04-20T07:45:34.701Z Loaded applet removable-drives@cinnamon.org in 6 ms
+info t=2017-04-20T07:45:34.735Z Loaded applet keyboard@cinnamon.org in 33 ms
+info t=2017-04-20T07:45:34.796Z Loaded applet network@cinnamon.org in 59 ms
+info t=2017-04-20T07:45:34.826Z Loaded applet sound@cinnamon.org in 29 ms
+info t=2017-04-20T07:45:34.842Z Loaded applet power@cinnamon.org in 15 ms
+info t=2017-04-20T07:45:34.849Z Loaded applet systray@cinnamon.org in 6 ms
+info t=2017-04-20T07:45:34.867Z Loaded applet calendar@cinnamon.org in 16 ms
+info t=2017-04-20T07:45:34.874Z Loaded applet windows-quick-list@cinnamon.org in 6 ms
+info t=2017-04-20T07:45:34.874Z AppletManager.init() started in 704 ms
+info t=2017-04-20T07:45:34.877Z Cinnamon took 1001 ms to start
+info t=2017-04-20T07:45:35.352Z Hiding systray: network
+info t=2017-04-20T07:45:35.353Z Adding systray: blueberry-tray.py (24x24px)
+info t=2017-04-20T07:45:50.344Z PlacesManager: Updating devices
+info t=2017-04-20T07:45:54.372Z Adding systray: mintupdate.py (24x24px)
+info t=2017-04-20T09:56:06.692Z GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.cinnamon.SettingsDaemon was not provided by any .service files
+trace t=2017-04-20T09:56:06.693Z 
+<----------------
+_proxyInvoker/asyncCallback@resource:///org/gnome/gjs/modules/overrides/Gio.js:83
+---------------->

@@ -1,0 +1,283 @@
+(function() {
+  angular.module('app.controllers.user', []).controller('ProfilePageCtrl', [
+    '$scope', '$modal', '$notify', function($scope, $modal, $notify) {
+      return $scope.updateProfile = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "updateProfileModal.html",
+          controller: 'UpdateProfileModalCtrl',
+          size: 'lg',
+          resolve: {
+            user: function() {
+              return angular.copy($scope.currentUser);
+            }
+          }
+        });
+        return modalInstance.result.then(function(user) {
+          $scope.setCurrentUser(user);
+          return $notify.log("Profile updated");
+        });
+      };
+    }
+  ]).controller('UserAuthenticationWidgetCtrl', [
+    '$scope', '$modal', '$auth', '$notify', function($scope, $modal, $auth, $notify) {
+      $scope.privateGithub = ($scope.currentUser.github_auth_id != null) && ($scope.currentUser.github_auth_token != null);
+      $scope.togglePrivateGithub = function() {
+        var provider;
+        provider = $scope.privateGithub ? 'github_repo' : 'github_setup';
+        return $auth.link(provider).then(function(res) {
+          $scope.setCurrentUser(res.data.user);
+          return $notify.log("GitHub account updated");
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error ? res.data.error : "Error updating account");
+        });
+      };
+      $scope.linkGithub = function() {
+        return $auth.link('github').then(function(res) {
+          $scope.setCurrentUser(res.data.user);
+          return $notify.log("GitHub account linked");
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error ? res.data.error : "Error linking account");
+        });
+      };
+      $scope.unlinkGithub = function() {
+        return $auth.unlink('github').then(function(res) {
+          $scope.setCurrentUser(res.data);
+          $notify.logWarning("GitHub account unlinked");
+          return $scope.privateGithub = false;
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error ? res.data.error : "Error unlinking account");
+        });
+      };
+      $scope.linkGoogle = function() {
+        return $auth.link('google').then(function(res) {
+          $scope.setCurrentUser(res.data.user);
+          return $notify.log("Google account linked");
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error ? res.data.error : "Error linking account");
+        });
+      };
+      $scope.unlinkGoogle = function() {
+        return $auth.unlink('google').then(function(res) {
+          $scope.setCurrentUser(res.data);
+          return $notify.logWarning("Google account unlinked");
+        })["catch"](function(res) {
+          return $notify.logError(res.data.error ? res.data.error : "Error unlinking account");
+        });
+      };
+      return $scope.changePassword = function() {
+        var modalInstance;
+        modalInstance = $modal.open({
+          templateUrl: "changePasswordModal.html",
+          controller: 'ChangePasswordModalCtrl',
+          size: 'lg',
+          resolve: {
+            user: function() {
+              return angular.copy($scope.currentUser);
+            }
+          }
+        });
+        return modalInstance.result.then(function(user) {
+          return $notify.log("Password changed");
+        });
+      };
+    }
+  ]).controller('UserAccountsWidgetCtrl', [
+    '$scope', 'AccountService', function($scope, AccountService) {
+      $scope.loading = true;
+      $scope.accounts = null;
+      return AccountService.getAccounts().then(function(data) {
+        var account, _fn, _i, _len, _ref;
+        $scope.accounts = data;
+        _ref = $scope.accounts;
+        _fn = function(account) {
+          return AccountService.getMembers(account).then(function(data) {
+            return account.users = data;
+          });
+        };
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          account = _ref[_i];
+          _fn(account);
+        }
+        return $scope.loading = false;
+      });
+    }
+  ]).controller('UpdateProfileModalCtrl', [
+    '$scope', '$modalInstance', 'UserService', 'user', function($scope, $modalInstance, UserService, user) {
+      $scope.user = user;
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.updateProfileForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        $scope.user.display_name = null;
+        return UserService.saveUser($scope.user).success(function(data) {
+          return $modalInstance.close(data);
+        }).error(function(data) {
+          return $scope.error = data.error;
+        })["finally"](function() {
+          return $scope.submitting = false;
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('ChangePasswordModalCtrl', [
+    '$scope', '$modalInstance', 'UserService', 'user', function($scope, $modalInstance, UserService, user) {
+      $scope.user = user;
+      $scope.submitting = false;
+      $scope.error = null;
+      $scope.canSubmit = function() {
+        return $scope.changePasswordForm.$valid && !$scope.submitting;
+      };
+      $scope.doSubmit = function() {
+        $scope.submitting = true;
+        $scope.error = null;
+        return UserService.changePassword($scope.user, $scope.password).success(function(data) {
+          return $modalInstance.close(data);
+        })["catch"](function(data) {
+          $scope.submitting = false;
+          return $scope.error = data.error;
+        });
+      };
+      return $scope.cancel = function() {
+        return $modalInstance.dismiss('cancel');
+      };
+    }
+  ]).controller('TokensPageCtrl', ['$scope', function($scope) {}]).controller('TokenListCtrl', [
+    '$scope', '$modal', '$notify', 'UserService', function($scope, $modal, $notify, UserService) {
+      $scope.currentPage = 1;
+      $scope.numTokensPerPage = 5;
+      $scope.numTokens = 0;
+      $scope.tokens = [];
+      $scope.refresh = function() {
+        var count, offset;
+        count = $scope.numTokensPerPage;
+        offset = $scope.numTokensPerPage * ($scope.currentPage - 1);
+        return UserService.listTokens($scope.currentUser, count, offset).success(function(data) {
+          $scope.numTokens = data.total;
+          return $scope.tokens = data.tokens;
+        })["catch"](function(res) {});
+      };
+      $scope.formatSecret = function(secret) {
+        return new Array(secret.length + 1).join('X');
+      };
+      $scope.showToken = function(token) {
+        var modalInstance;
+        return modalInstance = $modal.open({
+          templateUrl: "tokenDetailModal.html",
+          controller: 'TokenDetailModalInstanceCtrl',
+          size: 'lg',
+          resolve: {
+            account: function() {
+              return $scope.currentAccount;
+            },
+            user: function() {
+              return $scope.currentUser;
+            },
+            token: function() {
+              return token;
+            }
+          }
+        });
+      };
+      $scope.createToken = function() {
+        return UserService.createToken($scope.currentUser).success(function(data) {
+          return $scope.refresh();
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error adding token.');
+        });
+      };
+      $scope.deleteToken = function(id) {
+        return UserService.deleteToken($scope.currentUser, id).success(function(data) {
+          $scope.refresh();
+          return $notify.logWarning("Deleted token.");
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error deleting token.');
+        });
+      };
+      return $scope.refresh();
+    }
+  ]).controller('TokenDetailModalInstanceCtrl', [
+    '$scope', '$modalInstance', 'account', 'user', 'token', function($scope, $modalInstance, account, user, token) {
+      $scope.currentAccount = account;
+      $scope.currentUser = user;
+      $scope.token = token;
+      return $scope.ok = function() {
+        return $modalInstance.dismiss("ok");
+      };
+    }
+  ]).controller('TokenCopyCtrl', [
+    '$scope', '$timeout', '$notify', 'AccountService', 'UserService', function($scope, $timeout, $notify, AccountService, UserService) {
+      var formatCopyText, formatText, showSecret;
+      $scope.loading = true;
+      $scope.text = '';
+      $scope.copyText = '';
+      $scope.secretButtonText = 'Show secret';
+      $scope.copyButtonText = 'Copy to clipboard';
+      showSecret = false;
+      $scope.$on('current_account_change', function() {
+        $scope.text = formatText();
+        return $scope.copyText = formatCopyText();
+      });
+      formatText = function() {
+        var secret;
+        secret = showSecret ? $scope.token.secret : "<SECRET>";
+        return "rsconnect::setAccountInfo(name='" + $scope.currentAccount.name + "',\n" + "\t\t\t  token='" + $scope.token.token + "',\n" + "\t\t\t  secret='" + secret + "')";
+      };
+      formatCopyText = function() {
+        return "rsconnect::setAccountInfo(name='" + $scope.currentAccount.name + "', " + "token='" + $scope.token.token + "', " + "secret='" + $scope.token.secret + "')";
+      };
+      $scope.toggleSecret = function() {
+        showSecret = !showSecret;
+        $scope.text = formatText();
+        return $scope.secretButtonText = showSecret ? 'Hide secret' : 'Show Secret';
+      };
+      $scope.onCopy = function() {
+        var originalText;
+        originalText = $scope.copyButtonText;
+        $scope.copyButtonText = 'Copied!';
+        return $timeout(function() {
+          return $scope.copyButtonText = originalText;
+        }, 5000);
+      };
+      if (!$scope.token) {
+        UserService.listTokens($scope.currentUser, 1, 0).success(function(data) {
+          $scope.token = data.tokens[0];
+          $scope.text = formatText();
+          return $scope.copyText = formatCopyText();
+        }).error(function(data) {
+          return $notify.logError(data.error != null ? data.error : 'Error retrieving token data.');
+        });
+      } else {
+        $scope.text = formatText();
+        $scope.copyText = formatCopyText();
+      }
+      return $scope.loading = false;
+    }
+  ]);
+
+}).call(this);
+.ñ°‹Ëò      Xø¢êXø¢ê=«’Xøá„   ;    :https://www.shinyapps.io/admin/scripts/controllers/user.js necko:classified 1 strongly-framed 1 security-info FnhllAKWRHGAlo+ESXykKAAAAAAAAAAAwAAAAAAAAEaphjojH6pBabDSgSnsfLHeAAQAAgAAAAAAAAAAAAAAAAAAAAAB4vFIJp5wRkeyPxAQ9RJGKPqbqVvKO0mKuIl8ec8o/uhmCjImkVxP+7sgiYWmMt8FvcOXmlQiTNWFiWlrbpbqgwAAAAAAAAUIMIIFBDCCA+ygAwIBAgISA0Ts33LowAg+Zs9m9tEz8o6AMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQDExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzAzMjcxNzE3MDBaFw0xNzA2MjUxNzE3MDBaMBsxGTAXBgNVBAMTEHd3dy5zaGlueWFwcHMuaW8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCtYbnYnZ/rN6p/1Fqp8gX3qB6k1uy6TwOLZPF+lZxfQ4uonOowQ7UrFwapU+mITi/l5Rw77Pdal5jVGipicvvZbgZkMkc+HqUBDLGbMdqZct3QvqVQFVSKYkwQMWqIJkljmr2WSpbPtxeD9c6AJ8uU/orqZPZlOnRnI3/+8OlnTvogssGaAEWkijBF9NuDm42yDiLtv5qWhhKjzppgjDTYVA109kg/+DvMQFpvfWVG6Vy/Ic8fnJKrMpQOFyYuSOs1nkqw0xwirqbO6CHUMjWOr5gEekDRx+12SxpwR0FAdpBVb8WQWGvkAdkEJk+MyzBv1D2iKJ1QkkKQYYhdHGf/AgMBAAGjggIRMIICDTAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFAitCoNqQC56a3oTa2Zjkc/MXX8oMB8GA1UdIwQYMBaAFKhKamMEfd265tE5t6ZFZe/zqOyhMHAGCCsGAQUFBwEBBGQwYjAvBggrBgEFBQcwAYYjaHR0cDovL29jc3AuaW50LXgzLmxldHNlbmNyeXB0Lm9yZy8wLwYIKwYBBQUHMAKGI2h0dHA6Ly9jZXJ0LmludC14My5sZXRzZW5jcnlwdC5vcmcvMBsGA1UdEQQUMBKCEHd3dy5zaGlueWFwcHMuaW8wgf4GA1UdIASB9jCB8zAIBgZngQwBAgEwgeYGCysGAQQBgt8TAQEBMIHWMCYGCCsGAQUFBwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCBqwYIKwYBBQUHAgIwgZ4MgZtUaGlzIENlcnRpZmljYXRlIG1heSBvbmx5IGJlIHJlbGllZCB1cG9uIGJ5IFJlbHlpbmcgUGFydGllcyBhbmQgb25seSBpbiBhY2NvcmRhbmNlIHdpdGggdGhlIENlcnRpZmljYXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL2xldHNlbmNyeXB0Lm9yZy9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAW666JtafvOyKokL4jdvNvNdNENb5+jsy11DteHT+Src08XKErD37JHNGB9eiP96ifoltDPCoY0khBXoUWgf/sqLCyGaN9ZKqzcsQVRi7zP96a+tCoTpA0+FUnGuh7V1Fnruzhr4S/P8aqi1RKcsJsaX2hd7VaDUeBcHoXD8VFnTWP12XXzRr/07MulIlpB5HFVqOWcgQ+u5HSBLpm5ypWzQdEwfZEn/JbVnbN7kiM1x823MwO2aflw8a6E9fjGjDcibUrSv2H5qy+no92APoZcf/P5iYRdS7pNcB+fRpQSaa53a8QWCq4SV3Q8N/bDfuwAkdQeBJfHy9TRgMkpstV8AvAQMAAAAAAQEAAAEA request-method GET response-head HTTP/1.1 200 OK
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Etag: "e3cc9b261bedb3f0bfc8ed93d81870fc"
+Content-Length: 10423
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ original-response-headers Connection: keep-alive
+Date: Thu, 20 Apr 2017 12:00:16 GMT
+Etag: "e3cc9b261bedb3f0bfc8ed93d81870fc"
+Content-Length: 10423
+Server: TornadoServer/4.0.2
+Accept-Ranges: bytes
+Last-Modified: Tue, 18 Apr 2017 15:20:18 GMT
+Content-Type: application/javascript
+Via: 1.1 vegur
+ uncompressed-len 0 net-response-time-onstart 27011 net-response-time-onstop 27012   (·
